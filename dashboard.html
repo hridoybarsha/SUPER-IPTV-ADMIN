@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+📺 SUPER IPTV
+</div>
+
+<a href="dashboard.html">
+<span class="material-icons">dashboard</span>
+Dashboard
+</a>
+
+<a href="users.html">
+<span class="material-icons">groups</span>
+Users
+</a>
+
+<a href="payments.html">
+<span class="material-icons">payments</span>
+Payments
+</a>
+
+<a href="settings.html">
+<span class="material-icons">settings</span>
+Settings
+</a>
+
+<a href="#" onclick="logout()">
+<span class="material-icons">logout</span>
+Logout
+</a>
+
+</div>
+
+<div class="main">
+
+<div class="header">
+
+<h1>Dashboard</h1>
+
+<div class="profile">
+
+<div class="avatar">
+A
+</div>
+
+<div>
+
+<b>Administrator</b><br>
+
+<small>SUPER IPTV</small>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Total Users</h3>
+
+<h2 id="totalUsers">0</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Active Users</h3>
+
+<h2 id="activeUsers">0</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Expired Users</h3>
+
+<h2 id="expiredUsers">0</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Total Revenue</h3>
+
+<h2 id="revenue">₹0</h2>
+
+</div>
+
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>User</th>
+
+<th>Phone</th>
+
+<th>Plan</th>
+
+<th>Status</th>
+
+<th>Expiry</th>
+
+</tr>
+
+</thead>
+
+<tbody id="recentUsers">
+
+<tr>
+
+<td colspan="5">
+
+No Users Found
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+if(localStorage.getItem("loggedIn")!="true"){
+
+location.href="index.html";
+
+}
+
+function logout(){
+
+localStorage.removeItem("loggedIn");
+
+location.href="index.html";
+
+}
+
+</script>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+
+</html>
