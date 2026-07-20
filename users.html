@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SUPER IPTV - Users</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="logo">
+📺 SUPER IPTV
+</div>
+
+<a href="dashboard.html">
+<span class="material-icons">dashboard</span>
+Dashboard
+</a>
+
+<a href="users.html">
+<span class="material-icons">groups</span>
+Users
+</a>
+
+<a href="payments.html">
+<span class="material-icons">payments</span>
+Payments
+</a>
+
+<a href="settings.html">
+<span class="material-icons">settings</span>
+Settings
+</a>
+
+<a href="index.html">
+<span class="material-icons">logout</span>
+Logout
+</a>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<div class="header">
+
+<h1>User Management</h1>
+
+<div class="profile">
+
+<div class="avatar">
+A
+</div>
+
+<div>
+
+<b>Administrator</b>
+
+<br>
+
+<small>SUPER IPTV</small>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Cards -->
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Total Users</h3>
+
+<h2 id="totalUsers">0</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Active Users</h3>
+
+<h2 id="activeUsers">0</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Expired Users</h3>
+
+<h2 id="expiredUsers">0</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Revenue</h3>
+
+<h2 id="revenue">₹0</h2>
+
+</div>
+
+</div>
+
+<!-- Add User Form -->
+
+<div class="form-box">
+
+<h2>Add New User</h2>
+
+<input id="phone" type="text" placeholder="Phone Number">
+
+<input id="username" type="text" placeholder="Username">
+
+<input id="password" type="password" placeholder="Password">
+
+<input id="portal" type="text" placeholder="Portal URL">
+
+<select id="plan">
+
+<option value="1 Month">1 Month</option>
+
+<option value="3 Months">3 Months</option>
+
+<option value="6 Months">6 Months</option>
+
+<option value="12 Months">12 Months</option>
+
+</select>
+
+<button class="btn btn-success" onclick="saveUser()">
+
+Add User
+
+</button>
+
+</div>
+
+<!-- Search -->
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchUser"
+placeholder="Search User..."
+onkeyup="searchUser()">
+
+</div>
+
+<!-- Users Table -->
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Phone</th>
+
+<th>Username</th>
+
+<th>Plan</th>
+
+<th>Status</th>
+
+<th>Expiry</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="userTable">
+
+<!-- Data from users.js -->
+
+</tbody>
+
+</table>
+
+</div>
+
+<script src="js/users.js"></script>
+
+</body>
+
+</html>
+<!-- Users Table Section -->
+
+<div class="content-card">
+
+    <div class="table-header">
+        <h2>All Users</h2>
+
+        <button class="add-btn" onclick="openAddUser()">
+            + Add User
+        </button>
+    </div>
+
+
+    <table class="users-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Expiry</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+
+        <tbody id="userTableBody">
+
+            <tr>
+                <td>1</td>
+                <td>Rahul</td>
+                <td>rahul@gmail.com</td>
+                <td>9876543210</td>
+                <td>Premium</td>
+
+                <td>
+                    <span class="active">
+                        Active
+                    </span>
+                </td>
+
+                <td>
+                    20-08-2026
+                </td>
+
+                <td>
+
+                    <button class="edit-btn">
+                        Edit
+                    </button>
+
+                    <button class="delete-btn">
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+
+        </tbody>
+
+
+    </table>
+
+
+</div>
+
+
+
+<!-- Add User Popup -->
+
+
+<div id="userModal" class="modal">
+
+
+<div class="modal-box">
+
+<h2>Add New User</h2>
+
+
+<input 
+type="text" 
+id="username"
+placeholder="User Name">
+
+
+<input 
+type="email"
+id="useremail"
+placeholder="Email">
+
+
+<input 
+type="number"
+id="usermobile"
+placeholder="Mobile Number">
+
+
+<select id="userplan">
+
+<option>
+Basic
+</option>
+
+<option>
+Premium
+</option>
+
+<option>
+VIP
+</option>
+
+</select>
+
+
+
+<button onclick="saveUser()"
+class="save-btn">
+
+Save User
+
+</button>
+
+
+<button onclick="closeUser()"
+class="cancel-btn">
+
+Cancel
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+<script src="users.js"></script>
