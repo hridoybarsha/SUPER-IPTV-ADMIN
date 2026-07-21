@@ -1,0 +1,622 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SUPER IPTV Management Panel</title>
+
+<link rel="stylesheet" href="./style.css">
+
+</head><body><!-- =========================
+     SIDEBAR
+========================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        SUPER IPTV
+    </div>
+
+    <button
+        type="button"
+        class="menu-btn active"
+        data-page="dashboard">
+        🏠 Dashboard
+    </button>
+
+    <button
+        type="button"
+        class="menu-btn"
+        data-page="users">
+        👥 Users
+    </button>
+
+    <button
+        type="button"
+        class="menu-btn"
+        data-page="payments">
+        💳 Payments
+    </button>
+
+    <button
+        type="button"
+        class="menu-btn"
+        data-page="reports">
+        📊 Reports
+    </button>
+
+    <button
+        type="button"
+        class="menu-btn"
+        data-page="settings">
+        ⚙️ Settings
+    </button>
+
+</aside>
+
+
+<!-- =========================
+     MAIN CONTENT
+========================== -->
+
+<main class="main-content">
+
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+    <section
+        id="dashboard"
+        class="page active">
+
+        <h1>Dashboard</h1>
+
+        <p>SUPER IPTV Management Panel</p>
+
+        <div class="admin-box">
+            👤 Administrator
+        </div>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <h3>Total Users</h3>
+                <strong id="totalUsers">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🟢</div>
+                <h3>Active Users</h3>
+                <strong id="activeUsers">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🔴</div>
+                <h3>Expired Users</h3>
+                <strong id="expiredUsers">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <h3>Total Revenue</h3>
+                <strong id="totalRevenue">₹0</strong>
+            </div>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <h2>Recent Users</h2>
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Expiry</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="recentUsers">
+
+                        <tr>
+                            <td colspan="5">
+                                No Users Yet
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         USERS
+    ========================== -->
+
+    <section
+        id="users"
+        class="page">
+
+        <h1>👥 Users</h1>
+
+
+        <div class="form-card">
+
+            <h2>Add Customer</h2>
+
+            <form id="userForm">
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Customer Name"
+                    required>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="WhatsApp Number"
+                    required>
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Username"
+                    required>
+
+                <input
+                    type="text"
+                    id="password"
+                    placeholder="Password"
+                    required>
+
+                <input
+                    type="text"
+                    id="portalUrl"
+                    placeholder="Portal URL"
+                    value="http://geoiptv.one:8880"
+                    required>
+
+
+                <select
+                    id="plan"
+                    required>
+
+                    <option value="">
+                        Select Plan
+                    </option>
+
+                    <option value="1 Month">
+                        1 Month - ₹200
+                    </option>
+
+                    <option value="3 Months">
+                        3 Months - ₹600
+                    </option>
+
+                    <option value="6 Months">
+                        6 Months - ₹1150
+                    </option>
+
+                    <option value="12 Months">
+                        12 Months - ₹2000
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Amount"
+                    readonly>
+
+
+                <select
+                    id="paymentStatus"
+                    required>
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="Paid">
+                        Paid
+                    </option>
+
+                </select>
+
+
+                <!-- QR CODE -->
+
+                <div
+                    id="qrcode"
+                    class="qr-box">
+
+                    <span>
+                        Select a plan to generate QR
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="qrPlan"
+                    class="qr-info">
+
+                    Select a plan to generate QR
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="downloadQR"
+                    class="primary-btn">
+
+                    📥 Download QR PNG
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="success-btn">
+
+                    ➕ Add Customer
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- CUSTOMER LIST -->
+
+        <div class="table-card">
+
+            <h2>Customer List</h2>
+
+
+            <input
+                type="text"
+                id="searchUser"
+                placeholder="Search customer...">
+
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Expiry</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="usersTable">
+
+                        <tr>
+
+                            <td colspan="9">
+                                No Customers Found
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         PAYMENTS
+    ========================== -->
+
+    <section
+        id="payments"
+        class="page">
+
+        <h1>💳 Payments</h1>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <h3>Total Payments</h3>
+                <strong id="totalPayments">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <h3>Paid</h3>
+                <strong id="paidPayments">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <h3>Pending</h3>
+                <strong id="pendingPayments">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <h3>Revenue</h3>
+                <strong id="paymentRevenue">₹0</strong>
+            </div>
+
+        </div>
+
+
+        <div class="table-card">
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="paymentsTable">
+
+                        <tr>
+
+                            <td colspan="6">
+                                No Payments Yet
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         REPORTS
+    ========================== -->
+
+    <section
+        id="reports"
+        class="page">
+
+        <h1>📊 Reports</h1>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <h3>Total Revenue</h3>
+
+                <strong id="reportRevenue">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Paid Payments</h3>
+
+                <strong id="paidCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Pending Payments</h3>
+
+                <strong id="pendingCount">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         SETTINGS
+    ========================== -->
+
+    <section
+        id="settings"
+        class="page">
+
+        <h1>⚙️ Settings</h1>
+
+
+        <!-- PAYMENT SETTINGS -->
+
+        <div class="form-card">
+
+            <h2>Payment Settings</h2>
+
+
+            <label>
+                UPI ID
+            </label>
+
+            <input
+                type="text"
+                id="settingUpi">
+
+
+            <label>
+                Contact Number
+            </label>
+
+            <input
+                type="text"
+                id="settingContact">
+
+
+            <label>
+                Portal URL
+            </label>
+
+            <input
+                type="text"
+                id="settingPortal">
+
+
+            <button
+                type="button"
+                id="saveSettings"
+                class="success-btn">
+
+                💾 Save Settings
+
+            </button>
+
+        </div>
+
+
+        <!-- WHATSAPP TEMPLATE -->
+
+        <div class="form-card">
+
+            <h2>
+                WhatsApp Message Template
+            </h2>
+
+
+            <p class="help-text">
+
+                Available Variables:
+
+                {{USERNAME}}
+
+                {{PASSWORD}}
+
+                {{PORTAL_URL}}
+
+                {{PLAN}}
+
+                {{AMOUNT}}
+
+                {{EXPIRY}}
+
+                {{UPI_ID}}
+
+                {{CONTACT}}
+
+            </p>
+
+
+            <textarea
+                id="messageTemplate"
+                rows="18">
+            </textarea>
+
+
+            <button
+                type="button"
+                id="saveTemplate"
+                class="success-btn">
+
+                💾 Save Template
+
+            </button>
+
+        </div>
+
+
+        <!-- DANGER ZONE -->
+
+        <div class="form-card danger-zone">
+
+            <h2>
+                Danger Zone
+            </h2>
+
+
+            <button
+                type="button"
+                id="deleteAll"
+                class="danger-btn">
+
+                🗑️ Delete All Users & Payments
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================
+     QR CODE LIBRARY
+     LOAD ONLY ONCE
+========================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<!-- =========================
+     MAIN JAVASCRIPT
+     LOAD ONLY ONCE
+========================== -->
+
+<script src="./script.js"></script>
+
+</body></html>
