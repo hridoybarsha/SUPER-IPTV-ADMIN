@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>SUPER IPTV Admin Panel</title>
+
+<link
+rel="stylesheet"
+href="style.css"
+>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<div class="admin-layout">
+
+
+<aside class="sidebar">
+
+
+<div class="logo">
+
+📺 SUPER IPTV
+
+</div>
+
+
+<nav class="sidebar-menu">
+
+
+<button
+class="nav-btn active"
+onclick="showSection('dashboard', this)"
+>
+
+🏠 Dashboard
+
+</button>
+
+
+<button
+class="nav-btn"
+onclick="showSection('users', this)"
+>
+
+👥 Users
+
+</button>
+
+
+<button
+class="nav-btn"
+onclick="showSection('payments', this)"
+>
+
+💳 Payments
+
+</button>
+
+
+<button
+class="nav-btn"
+onclick="showSection('reports', this)"
+>
+
+📊 Reports
+
+</button>
+
+
+<button
+class="nav-btn"
+onclick="showSection('settings', this)"
+>
+
+⚙️ Settings
+
+</button>
+
+
+</nav>
+
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main-content">
+
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section
+id="dashboardSection"
+class="page-section"
+>
+
+
+<div class="topbar">
+
+
+<div>
+
+<h1 class="page-title">
+
+Dashboard
+
+</h1>
+
+<p class="admin-info">
+
+SUPER IPTV Management Panel
+
+</p>
+
+</div>
+
+
+<div class="admin-profile">
+
+👤 Administrator
+
+</div>
+
+
+</div>
+
+
+
+<!-- STATISTICS -->
+
+<div class="stats-grid">
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+
+👥
+
+</div>
+
+<div class="label">
+
+Total Users
+
+</div>
+
+<div
+class="value"
+id="totalUsers"
+>
+
+0
+
+</div>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+
+🟢
+
+</div>
+
+<div class="label">
+
+Active Users
+
+</div>
+
+<div
+class="value"
+id="activeUsers"
+>
+
+0
+
+</div>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+
+🔴
+
+</div>
+
+<div class="label">
+
+Expired Users
+
+</div>
+
+<div
+class="value"
+id="expiredUsers"
+>
+
+0
+
+</div>
+
+</div>
+
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+
+💰
+
+</div>
+
+<div class="label">
+
+Total Revenue
+
+</div>
+
+<div
+class="value"
+id="revenue"
+>
+
+₹0
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<!-- RECENT USERS -->
+
+<div class="card">
+
+
+<h2>
+
+Recent Users
+
+</h2>
+
+
+<div class="table-wrapper">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+
+<th>Phone</th>
+
+<th>Plan</th>
+
+<th>Status</th>
+
+<th>Expiry</th>
+
+</tr>
+
+</thead>
+
+
+<tbody
+id="dashboardTable"
+>
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     USERS
+===================================================== -->
+
+<section
+id="usersSection"
+class="page-section hidden"
+>
+
+
+<h1 class="page-title">
+
+User Management
+
+</h1>
+
+
+<!-- ADD USER FORM -->
+
+<div class="card">
+
+
+<h2 id="userFormTitle">
+
+Add New User
+
+</h2>
+
+
+<form
+id="userForm"
+class="user-form"
+>
+
+
+<input
+type="hidden"
+id="editUserId"
+>
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Customer Name
+
+</label>
+
+
+<input
+type="text"
+id="customerName"
+placeholder="Customer Name"
+required
+>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Phone Number
+
+</label>
+
+
+<input
+type="tel"
+id="customerPhone"
+placeholder="Phone Number"
+required
+>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Username
+
+</label>
+
+
+<input
+type="text"
+id="customerUsername"
+placeholder="IPTV Username"
+required
+>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Password
+
+</label>
+
+
+<input
+type="text"
+id="customerPassword"
+placeholder="IPTV Password"
+required
+>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Plan
+
+</label>
+
+
+<select
+id="customerPlan"
+required
+>
+
+
+<option value="">
+
+Select Plan
+
+</option>
+
+
+<option value="1 Month">
+
+1 Month - ₹200
+
+</option>
+
+
+<option value="3 Months">
+
+3 Months - ₹550
+
+</option>
+
+
+<option value="6 Months">
+
+6 Months - ₹1000
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Payment Status
+
+</label>
+
+
+<select
+id="paymentStatus"
+>
+
+
+<option value="Paid">
+
+Paid
+
+</option>
+
+
+<option value="Pending">
+
+Pending
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+<div class="form-actions">
+
+
+<button
+type="submit"
+class="btn-success"
+id="saveUserBtn"
+>
+
+➕ Add User
+
+</button>
+
+
+<button
+type="button"
+class="btn-secondary hidden"
+id="cancelEditBtn"
+onclick="cancelEdit()"
+>
+
+Cancel
+
+</button>
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+
+<!-- ALL USERS -->
+
+
+<div class="card">
+
+
+<div class="section-header">
+
+
+<h2>
+
+All Users
+
+</h2>
+
+
+<input
+type="search"
+id="userSearch"
+placeholder="Search User..."
+oninput="renderUsers()"
+>
+
+
+</div>
+
+
+
+<div class="table-wrapper">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Phone</th>
+
+<th>Username</th>
+
+<th>Plan</th>
+
+<th>Price</th>
+
+<th>Status</th>
+
+<th>Expiry</th>
+
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+
+<tbody
+id="usersTable"
+>
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     PAYMENTS
+===================================================== -->
+
+<section
+id="paymentsSection"
+class="page-section hidden"
+>
+
+
+<h1 class="page-title">
+
+Payment Management
+
+</h1>
+
+
+<div class="card">
+
+
+<h2>
+
+Payment History
+
+</h2>
+
+
+<div class="table-wrapper">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Customer</th>
+
+<th>Phone</th>
+
+<th>Plan</th>
+
+<th>Amount</th>
+
+<th>Status</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+
+<tbody
+id="paymentsTable"
+>
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     REPORTS
+===================================================== -->
+
+<section
+id="reportsSection"
+class="page-section hidden"
+>
+
+
+<h1 class="page-title">
+
+Reports
+
+</h1>
+
+
+
+<div class="stats-grid">
+
+
+<div class="stat-card">
+
+
+<div class="label">
+
+Total Revenue
+
+</div>
+
+
+<div
+class="value"
+id="reportRevenue"
+>
+
+₹0
+
+</div>
+
+
+</div>
+
+
+
+<div class="stat-card">
+
+
+<div class="label">
+
+Paid Payments
+
+</div>
+
+
+<div
+class="value"
+id="paidPayments"
+>
+
+0
+
+</div>
+
+
+</div>
+
+
+
+<div class="stat-card">
+
+
+<div class="label">
+
+Pending Payments
+
+</div>
+
+
+<div
+class="value"
+id="pendingPayments"
+>
+
+0
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     SETTINGS
+===================================================== -->
+
+<section
+id="settingsSection"
+class="page-section hidden"
+>
+
+
+<h1 class="page-title">
+
+Settings
+
+</h1>
+
+
+<div class="card">
+
+
+<h2>
+
+SUPER IPTV Settings
+
+</h2>
+
+
+<div class="settings-row">
+
+
+<span>
+
+Panel Name
+
+</span>
+
+
+<strong>
+
+SUPER IPTV
+
+</strong>
+
+
+</div>
+
+
+<div class="settings-row">
+
+
+<span>
+
+Currency
+
+</span>
+
+
+<strong>
+
+Indian Rupee (₹)
+
+</strong>
+
+
+</div>
+
+
+<div class="settings-row">
+
+
+<span>
+
+Storage
+
+</span>
+
+
+<strong>
+
+Browser LocalStorage
+
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+<div class="card">
+
+
+<h2>
+
+Data Management
+
+</h2>
+
+
+<p class="admin-info">
+
+All users and payment data are stored in this browser.
+
+</p>
+
+
+<button
+class="btn-danger"
+onclick="clearAllData()"
+>
+
+🗑️ Delete All Data
+
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+</main>
+
+
+</div>
+
+
+
+<script
+src="script.js"
+></script>
+
+
+</body>
+
+</html>
