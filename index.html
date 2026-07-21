@@ -3,19 +3,19 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>SUPER IPTV Admin Panel</title>
+    <title>SUPER IPTV Management Panel</title>
 
-<link
-rel="stylesheet"
-href="style.css"
->
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
@@ -23,790 +23,789 @@ href="style.css"
 <body>
 
 
-<div class="app">
-
-
-<!-- ================= SIDEBAR ================= -->
+<!-- =========================
+     SIDEBAR
+========================= -->
 
 <aside class="sidebar">
 
-<div class="logo">
-📺 SUPER IPTV
-</div>
+    <div class="logo">
+        SUPER IPTV
+    </div>
 
 
-<button
-class="menu-btn active"
-data-page="dashboard"
->
-🏠 Dashboard
-</button>
+    <button
+        class="menu-btn active"
+        data-page="dashboard"
+    >
+        🏠 Dashboard
+    </button>
 
 
-<button
-class="menu-btn"
-data-page="users"
->
-👥 Users
-</button>
+    <button
+        class="menu-btn"
+        data-page="users"
+    >
+        👥 Users
+    </button>
 
 
-<button
-class="menu-btn"
-data-page="payments"
->
-💳 Payments
-</button>
+    <button
+        class="menu-btn"
+        data-page="payments"
+    >
+        💳 Payments
+    </button>
 
 
-<button
-class="menu-btn"
-data-page="reports"
->
-📊 Reports
-</button>
+    <button
+        class="menu-btn"
+        data-page="reports"
+    >
+        📊 Reports
+    </button>
 
 
-<button
-class="menu-btn"
-data-page="settings"
->
-⚙️ Settings
-</button>
+    <button
+        class="menu-btn"
+        data-page="settings"
+    >
+        ⚙️ Settings
+    </button>
 
 </aside>
 
 
 
-<!-- ================= MAIN ================= -->
+<!-- =========================
+     MAIN CONTENT
+========================= -->
 
-<main class="main">
+<main class="main-content">
 
 
-<!-- ================= DASHBOARD ================= -->
+<!-- =========================
+     DASHBOARD
+========================= -->
 
 <section
-class="page active"
-id="dashboard"
+    id="dashboard"
+    class="page active"
 >
 
-<div class="topbar">
+    <h1>
+        Dashboard
+    </h1>
 
-<div>
-
-<h1>Dashboard</h1>
-
-<p>
-SUPER IPTV Management Panel
-</p>
-
-</div>
-
-<div class="admin">
-👤 Administrator
-</div>
-
-</div>
+    <p>
+        SUPER IPTV Management Panel
+    </p>
 
 
-<div class="stats">
+    <div class="admin-box">
+        👤 Administrator
+    </div>
 
 
-<div class="stat">
-
-<span>👥</span>
-
-<h3>
-Total Users
-</h3>
-
-<strong id="totalUsers">
-0
-</strong>
-
-</div>
+    <div class="stats-grid">
 
 
-<div class="stat">
+        <div class="stat-card">
 
-<span>🟢</span>
+            <div class="stat-icon">
+                👥
+            </div>
 
-<h3>
-Active Users
-</h3>
+            <h3>
+                Total Users
+            </h3>
 
-<strong id="activeUsers">
-0
-</strong>
+            <strong id="totalUsers">
+                0
+            </strong>
 
-</div>
-
-
-<div class="stat">
-
-<span>🔴</span>
-
-<h3>
-Expired Users
-</h3>
-
-<strong id="expiredUsers">
-0
-</strong>
-
-</div>
+        </div>
 
 
-<div class="stat">
 
-<span>💰</span>
+        <div class="stat-card">
 
-<h3>
-Total Revenue
-</h3>
+            <div class="stat-icon">
+                🟢
+            </div>
 
-<strong id="totalRevenue">
-₹0
-</strong>
+            <h3>
+                Active Users
+            </h3>
 
-</div>
+            <strong id="activeUsers">
+                0
+            </strong>
 
-
-</div>
-
-
-<div class="box">
-
-<h2>
-Recent Users
-</h2>
+        </div>
 
 
-<div class="table-container">
 
-<table>
+        <div class="stat-card">
 
-<thead>
+            <div class="stat-icon">
+                🔴
+            </div>
 
-<tr>
+            <h3>
+                Expired Users
+            </h3>
 
-<th>
-Name
-</th>
+            <strong id="expiredUsers">
+                0
+            </strong>
 
-<th>
-Phone
-</th>
-
-<th>
-Plan
-</th>
-
-<th>
-Status
-</th>
-
-<th>
-Expiry
-</th>
-
-</tr>
-
-</thead>
+        </div>
 
 
-<tbody id="recentUsers">
 
-<tr>
+        <div class="stat-card">
 
-<td colspan="5">
-No Users Yet
-</td>
+            <div class="stat-icon">
+                💰
+            </div>
 
-</tr>
+            <h3>
+                Total Revenue
+            </h3>
 
-</tbody>
+            <strong id="totalRevenue">
+                ₹0
+            </strong>
 
-</table>
+        </div>
 
-</div>
+    </div>
 
-</div>
+
+
+    <div class="table-card">
+
+        <h2>
+            Recent Users
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Phone
+                    </th>
+
+                    <th>
+                        Plan
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Expiry
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="recentUsers">
+
+                <tr>
+
+                    <td colspan="5">
+                        No Users Yet
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </section>
 
 
 
-<!-- ================= USERS ================= -->
+<!-- =========================
+     USERS
+========================= -->
 
 <section
-class="page"
-id="users"
+    id="users"
+    class="page"
 >
 
-<h1>
-👥 Users
-</h1>
+    <h1>
+        👥 Users
+    </h1>
 
 
-<div class="box">
+    <div class="form-card">
 
-<h2>
-Add New Customer
-</h2>
+        <h2>
+            Add Customer
+        </h2>
 
 
-<form id="userForm">
+        <form id="userForm">
 
 
-<input
-type="text"
-id="customerName"
-placeholder="Customer Name"
-required
->
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Customer Name"
+                required
+            >
 
 
-<input
-type="text"
-id="phone"
-placeholder="WhatsApp Phone Number"
-required
->
+            <input
+                type="tel"
+                id="phone"
+                placeholder="WhatsApp Number"
+                required
+            >
 
 
-<input
-type="text"
-id="username"
-placeholder="IPTV Username"
-required
->
+            <input
+                type="text"
+                id="username"
+                placeholder="Username"
+                required
+            >
 
 
-<input
-type="text"
-id="password"
-placeholder="IPTV Password"
-required
->
+            <input
+                type="text"
+                id="password"
+                placeholder="Password"
+                required
+            >
 
 
-<input
-type="text"
-id="portalUrl"
-placeholder="Portal URL"
-value="http://geoiptv.one:8880"
-required
->
+            <input
+                type="text"
+                id="portalUrl"
+                placeholder="Portal URL"
+                value="http://geoiptv.one:8880"
+                required
+            >
 
 
-<!-- PLAN -->
+            <select
+                id="plan"
+                required
+            >
 
-<select id="plan" required>
+                <option value="">
+                    Select Plan
+                </option>
 
-    <option value="">Select Plan</option>
+                <option value="1 Month">
+                    1 Month - ₹200
+                </option>
 
-    <option value="1 Month">
-        1 Month - ₹200
-    </option>
+                <option value="3 Months">
+                    3 Months - ₹600
+                </option>
 
-    <option value="3 Months">
-        3 Months - ₹600
-    </option>
+                <option value="6 Months">
+                    6 Months - ₹1150
+                </option>
 
-    <option value="6 Months">
-        6 Months - ₹1150
-    </option>
+                <option value="12 Months">
+                    12 Months - ₹2000
+                </option>
 
-    <option value="12 Months">
-        12 Months - ₹2000
-    </option>
+            </select>
 
-</select>
 
+            <input
+                type="number"
+                id="amount"
+                placeholder="Amount"
+                readonly
+            >
 
-<!-- AUTO AMOUNT -->
 
-<input
-type="number"
-id="amount"
-placeholder="Amount"
-readonly
->
+            <select
+                id="paymentStatus"
+                required
+            >
 
+                <option value="Pending">
+                    Pending
+                </option>
 
-<select
-id="paymentStatus"
->
+                <option value="Paid">
+                    Paid
+                </option>
 
-<option value="Paid">
-Paid
-</option>
+            </select>
 
-<option value="Pending">
-Pending
-</option>
 
-</select>
+            <div
+                id="qrcode"
+                class="qr-box"
+            ></div>
 
 
-<button
-type="submit"
->
-➕ Add Customer
-</button>
+            <div
+                id="qrPlan"
+                class="qr-info"
+            >
+                Select a plan to generate QR
+            </div>
 
 
-</form>
+            <button
+                type="button"
+                id="downloadQR"
+            >
+                📥 Download QR
+            </button>
 
-</div>
 
+            <button
+                type="submit"
+            >
+                ➕ Add Customer
+            </button>
 
 
-<!-- ================= QR ================= -->
+        </form>
 
-<div
-class="box qr-box"
->
+    </div>
 
-<h2>
-🧾 UPI Payment QR Code
-</h2>
 
 
-<div
-id="qrcode"
->
-</div>
+    <div class="table-card">
 
 
-<p
-id="qrPlan"
->
-Select a plan to generate QR
-</p>
+        <h2>
+            Customer List
+        </h2>
 
 
-<button
-id="downloadQR"
-class="download-btn"
->
+        <input
+            type="text"
+            id="searchUser"
+            placeholder="Search customer..."
+        >
 
-📥 Download QR
 
-</button>
+        <div class="table-scroll">
 
-</div>
 
+            <table>
 
+                <thead>
 
-<!-- ================= CUSTOMER DATABASE ================= -->
+                    <tr>
 
-<div class="box">
+                        <th>
+                            Name
+                        </th>
 
-<h2>
-Customer Database
-</h2>
+                        <th>
+                            Phone
+                        </th>
 
+                        <th>
+                            Username
+                        </th>
 
-<input
-class="search"
-type="text"
-id="searchUser"
-placeholder="Search Customer..."
->
+                        <th>
+                            Password
+                        </th>
 
+                        <th>
+                            Plan
+                        </th>
 
-<div class="table-container">
+                        <th>
+                            Amount
+                        </th>
 
-<table>
+                        <th>
+                            Status
+                        </th>
 
-<thead>
+                        <th>
+                            Expiry
+                        </th>
 
-<tr>
+                        <th>
+                            Action
+                        </th>
 
-<th>
-Name
-</th>
+                    </tr>
 
-<th>
-Phone
-</th>
+                </thead>
 
-<th>
-Username
-</th>
 
-<th>
-Password
-</th>
+                <tbody id="usersTable">
 
-<th>
-Plan
-</th>
+                    <tr>
 
-<th>
-Amount
-</th>
+                        <td colspan="9">
+                            No Customers Found
+                        </td>
 
-<th>
-Status
-</th>
+                    </tr>
 
-<th>
-Expiry
-</th>
+                </tbody>
 
-<th>
-Actions
-</th>
+            </table>
 
-</tr>
 
-</thead>
+        </div>
 
-
-<tbody id="usersTable">
-
-<tr>
-
-<td colspan="9">
-No Customers Yet
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
 
 
-<!-- ================= PAYMENTS ================= -->
+<!-- =========================
+     PAYMENTS
+========================= -->
 
 <section
-class="page"
-id="payments"
+    id="payments"
+    class="page"
 >
 
-<h1>
-💳 Payments
-</h1>
+    <h1>
+        💳 Payments
+    </h1>
 
 
-<div class="stats">
+    <div class="stats-grid">
 
 
-<div class="stat">
+        <div class="stat-card">
 
-<h3>
-Total Payments
-</h3>
+            <h3>
+                Total Payments
+            </h3>
 
-<strong id="totalPayments">
-0
-</strong>
+            <strong id="totalPayments">
+                0
+            </strong>
 
-</div>
-
-
-<div class="stat">
-
-<h3>
-Paid
-</h3>
-
-<strong id="paidPayments">
-0
-</strong>
-
-</div>
+        </div>
 
 
-<div class="stat">
+        <div class="stat-card">
 
-<h3>
-Pending
-</h3>
+            <h3>
+                Paid
+            </h3>
 
-<strong id="pendingPayments">
-0
-</strong>
+            <strong id="paidPayments">
+                0
+            </strong>
 
-</div>
-
-
-<div class="stat">
-
-<h3>
-Total Revenue
-</h3>
-
-<strong id="paymentRevenue">
-₹0
-</strong>
-
-</div>
-
-</div>
+        </div>
 
 
+        <div class="stat-card">
 
-<div class="box">
+            <h3>
+                Pending
+            </h3>
 
-<h2>
-Payment History
-</h2>
+            <strong id="pendingPayments">
+                0
+            </strong>
 
-
-<div class="table-container">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-Customer
-</th>
-
-<th>
-Phone
-</th>
-
-<th>
-Plan
-</th>
-
-<th>
-Amount
-</th>
-
-<th>
-Status
-</th>
-
-<th>
-Date
-</th>
-
-</tr>
-
-</thead>
+        </div>
 
 
-<tbody id="paymentsTable">
+        <div class="stat-card">
 
-<tr>
+            <h3>
+                Revenue
+            </h3>
 
-<td colspan="6">
-No Payments Yet
-</td>
+            <strong id="paymentRevenue">
+                ₹0
+            </strong>
 
-</tr>
+        </div>
 
-</tbody>
 
-</table>
+    </div>
 
-</div>
 
-</div>
+    <div class="table-card">
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Phone
+                    </th>
+
+                    <th>
+                        Plan
+                    </th>
+
+                    <th>
+                        Amount
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="paymentsTable">
+
+                <tr>
+
+                    <td colspan="6">
+                        No Payments Yet
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+    </div>
 
 </section>
 
 
 
-<!-- ================= REPORTS ================= -->
+<!-- =========================
+     REPORTS
+========================= -->
 
 <section
-class="page"
-id="reports"
+    id="reports"
+    class="page"
 >
 
-<h1>
-📊 Reports
-</h1>
+    <h1>
+        📊 Reports
+    </h1>
 
 
-<div class="stats">
+    <div class="stats-grid">
 
 
-<div class="stat">
+        <div class="stat-card">
 
-<h3>
-Total Revenue
-</h3>
+            <h3>
+                Total Revenue
+            </h3>
 
-<strong id="reportRevenue">
-₹0
-</strong>
+            <strong id="reportRevenue">
+                ₹0
+            </strong>
 
-</div>
-
-
-<div class="stat">
-
-<h3>
-Paid Payments
-</h3>
-
-<strong id="paidCount">
-0
-</strong>
-
-</div>
+        </div>
 
 
-<div class="stat">
+        <div class="stat-card">
 
-<h3>
-Pending Payments
-</h3>
+            <h3>
+                Paid Payments
+            </h3>
 
-<strong id="pendingCount">
-0
-</strong>
+            <strong id="paidCount">
+                0
+            </strong>
 
-</div>
+        </div>
 
-</div>
+
+        <div class="stat-card">
+
+            <h3>
+                Pending Payments
+            </h3>
+
+            <strong id="pendingCount">
+                0
+            </strong>
+
+        </div>
+
+
+    </div>
 
 </section>
 
 
 
-<!-- ================= SETTINGS ================= -->
+<!-- =========================
+     SETTINGS
+========================= -->
 
 <section
-class="page"
-id="settings"
+    id="settings"
+    class="page"
 >
 
-<h1>
-⚙️ Settings
-</h1>
+    <h1>
+        ⚙️ Settings
+    </h1>
 
 
-<div class="box">
-
-<h2>
-Service Settings
-</h2>
+    <div class="form-card">
 
 
-<label>
-UPI ID
-</label>
-
-<input
-type="text"
-id="settingUpi"
-placeholder="6289033804@ptsbi"
->
+        <h2>
+            Payment Settings
+        </h2>
 
 
-<label>
-Support Contact
-</label>
-
-<input
-type="text"
-id="settingContact"
-placeholder="6289033804"
->
+        <label>
+            UPI ID
+        </label>
 
 
-<label>
-Default Portal URL
-</label>
-
-<input
-type="text"
-id="settingPortal"
-placeholder="http://geoiptv.one:8880"
->
+        <input
+            type="text"
+            id="settingUpi"
+        >
 
 
-<button
-id="saveSettings"
->
-💾 Save Settings
-</button>
-
-</div>
+        <label>
+            Contact Number
+        </label>
 
 
-
-<div class="box">
-
-<h2>
-WhatsApp Message Template
-</h2>
+        <input
+            type="text"
+            id="settingContact"
+        >
 
 
-<textarea
-id="messageTemplate"
-rows="18"
-></textarea>
+        <label>
+            Portal URL
+        </label>
 
 
-<button
-id="saveTemplate"
->
-💾 Save WhatsApp Template
-</button>
+        <input
+            type="text"
+            id="settingPortal"
+        >
 
-</div>
+
+        <button
+            id="saveSettings"
+        >
+            💾 Save Settings
+        </button>
+
+
+    </div>
 
 
 
-<div class="box">
-
-<h2>
-Data Management
-</h2>
+    <div class="form-card">
 
 
-<button
-class="delete-all"
-id="deleteAll"
->
-🗑️ Delete All Data
-</button>
+        <h2>
+            WhatsApp Message Template
+        </h2>
 
-</div>
+
+        <textarea
+            id="messageTemplate"
+            rows="15"
+        ></textarea>
+
+
+        <button
+            id="saveTemplate"
+        >
+            💾 Save Template
+        </button>
+
+
+    </div>
+
+
+
+    <div class="form-card danger-zone">
+
+
+        <h2>
+            Danger Zone
+        </h2>
+
+
+        <button
+            id="deleteAll"
+        >
+            🗑️ Delete All Users & Payments
+        </button>
+
+
+    </div>
 
 </section>
 
 
 </main>
 
-</div>
 
 
-
-<!-- QR CODE LIBRARY -->
-
-<script
-src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-></script>
-
-
-<!-- MAIN SCRIPT -->
+<!-- =========================
+     QR CODE LIBRARY
+========================= -->
 
 <script
-src="script.js"
-></script>
+src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+</script>
+
+
+<!-- =========================
+     YOUR JAVASCRIPT
+========================= -->
+
+<script src="script.js"></script>
 
 
 </body>
 
-</html>
+            </html>
