@@ -17,7 +17,7 @@ const PLAN_PRICES = {
 
     "6 Months": 1150,
    
-    "6 Months": 2000,
+    "12 Months": 2000,
 
 };
 
