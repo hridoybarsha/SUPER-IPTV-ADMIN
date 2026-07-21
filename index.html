@@ -19,7 +19,45 @@
 
 </head>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const menuButtons = document.querySelectorAll(".menu-btn");
+    const pages = document.querySelectorAll(".page");
+
+    menuButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const pageId = this.getAttribute("data-page");
+
+            // সব page hide
+            pages.forEach(function (page) {
+                page.classList.remove("active");
+            });
+
+            // সব menu inactive
+            menuButtons.forEach(function (menu) {
+                menu.classList.remove("active");
+            });
+
+            // selected page show
+            const selectedPage =
+                document.getElementById(pageId);
+
+            if (selectedPage) {
+                selectedPage.classList.add("active");
+            }
+
+            // selected menu active
+            this.classList.add("active");
+
+        });
+
+    });
+
+});
+    </script>
 <body>
 
 
