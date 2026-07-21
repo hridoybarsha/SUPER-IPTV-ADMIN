@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>SUPER IPTV - Payments</title>
+
+<link rel="stylesheet"
+href="style.css">
+
+<!-- QR CODE LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<div class="sidebar">
+
+<h2>📺 SUPER IPTV</h2>
+
+<a href="dashboard.html">
+🏠 Dashboard
+</a>
+
+<a href="users.html">
+👥 Users
+</a>
+
+<a href="payments.html">
+💳 Payments
+</a>
+
+<a href="reports.html">
+📊 Reports
+</a>
+
+<a href="settings.html">
+⚙ Settings
+</a>
+
+<a href="index.html">
+🚪 Logout
+</a>
+
+</div>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="main">
+
+
+<h1>
+Payment Management
+</h1>
+
+
+
+<!-- =====================================================
+     PAYMENT CARDS
+===================================================== -->
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+Total Payments
+</h3>
+
+<h2 id="totalPayments">
+0
+</h2>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Paid
+</h3>
+
+<h2 id="paidPayments">
+0
+</h2>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Pending
+</h3>
+
+<h2 id="pendingPayments">
+0
+</h2>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Total Revenue
+</h3>
+
+<h2 id="totalRevenue">
+₹0
+</h2>
+
+</div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     ADD PAYMENT
+===================================================== -->
+
+<div class="form">
+
+
+<h2>
+Add Payment
+</h2>
+
+
+<!-- USERNAME -->
+
+<input
+id="payUser"
+type="text"
+placeholder="Username"
+>
+
+
+<!-- PHONE -->
+
+<input
+id="payPhone"
+type="tel"
+placeholder="Phone Number"
+>
+
+
+<!-- AMOUNT -->
+
+<input
+id="amount"
+type="number"
+placeholder="Amount"
+oninput="generateQR(this.value)"
+>
+
+
+<!-- PAYMENT METHOD -->
+
+<select id="method">
+
+<option value="UPI">
+UPI
+</option>
+
+<option value="Cash">
+Cash
+</option>
+
+<option value="Bank">
+Bank
+</option>
+
+</select>
+
+
+
+<!-- PAYMENT STATUS -->
+
+<select id="paymentStatus">
+
+<option value="Pending">
+Pending
+</option>
+
+<option value="Paid">
+Paid
+</option>
+
+</select>
+
+
+
+<!-- QR CODE -->
+
+<h3 style="margin-top:20px;">
+UPI QR Code
+</h3>
+
+
+<div
+id="qrcode"
+style="
+margin:20px auto;
+width:220px;
+text-align:center;
+">
+</div>
+
+
+<p
+id="qrAmount"
+style="
+text-align:center;
+font-weight:bold;
+">
+</p>
+
+
+
+<!-- SAVE -->
+
+<button
+class="addBtn"
+onclick="addPayment()">
+
+💳 Save Payment
+
+</button>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<input
+id="paymentSearch"
+class="search"
+type="text"
+placeholder="Search Username / Phone / Method..."
+>
+
+
+<!-- =====================================================
+     PAYMENT TABLE
+===================================================== -->
+
+<h2>
+Payment History
+</h2>
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+ID
+</th>
+
+<th>
+Username
+</th>
+
+<th>
+Phone
+</th>
+
+<th>
+Amount
+</th>
+
+<th>
+Method
+</th>
+
+<th>
+Status
+</th>
+
+<th>
+Date
+</th>
+
+<th>
+Action
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody
+id="paymentTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="payments.js"></script>
+
+
+</body>
+
+</html>
