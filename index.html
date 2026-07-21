@@ -1,112 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SUPER IPTV Login</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
 
-<link rel="stylesheet" href="style.css">
+<title>SUPER IPTV</title>
+
+<meta
+http-equiv="refresh"
+content="0;url=dashboard.html"
+>
+
+<script>
+window.location.replace("dashboard.html");
+</script>
 
 </head>
 
-<body class="login-page">
+<body>
 
-<div class="login-box">
-
-    <h1>📺 SUPER IPTV</h1>
-
-    <p class="login-subtitle">
-        Professional Admin Panel
-    </p>
-
-    <input
-        type="text"
-        id="user"
-        placeholder="Admin Username"
-    >
-
-    <input
-        type="password"
-        id="pass"
-        placeholder="Password"
-    >
-
-    <button type="button" id="loginButton">
-        LOGIN
-    </button>
-
-    <div class="footer">
-        SUPER IPTV Admin Panel v1.0
-    </div>
-
-</div>
-
-
-<script>
-
-document
-.getElementById("loginButton")
-.addEventListener("click", function () {
-
-    var username =
-        document
-        .getElementById("user")
-        .value
-        .trim();
-
-    var password =
-        document
-        .getElementById("pass")
-        .value
-        .trim();
-
-
-    if (
-        username === "admin" &&
-        password === "123456"
-    ) {
-
-        localStorage.setItem(
-            "login",
-            "true"
-        );
-
-        window.location.href =
-            "dashboard.html";
-
-    } else {
-
-        alert(
-            "Wrong Username or Password"
-        );
-
-    }
-
-});
-
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            document
-            .getElementById(
-                "loginButton"
-            )
-            .click();
-
-        }
-
-    }
-);
-
-</script>
+<p>Loading SUPER IPTV Dashboard...</p>
 
 </body>
+
 </html>
