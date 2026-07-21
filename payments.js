@@ -23,11 +23,11 @@ const planPrices = {
 
     "1 Month": 200,
 
-    "3 Months": 550,
+    "3 Months": 600,
 
-    "6 Months": 1000,
+    "6 Months": 1150,
 
-    "12 Months": 1800
+    "12 Months": 2000
 
 };
 
