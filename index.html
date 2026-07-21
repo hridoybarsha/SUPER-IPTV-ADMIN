@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>SUPER IPTV Login</title>
 
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body class="login-page">
@@ -23,17 +25,17 @@
         type="text"
         id="user"
         placeholder="Admin Username"
-        autocomplete="username"
     >
 
     <input
         type="password"
         id="pass"
         placeholder="Password"
-        autocomplete="current-password"
     >
 
-    <button onclick="login()">LOGIN</button>
+    <button type="button" id="loginButton">
+        LOGIN
+    </button>
 
     <div class="footer">
         SUPER IPTV Admin Panel v1.0
@@ -41,17 +43,69 @@
 
 </div>
 
-<script src="script.js"></script>
 
 <script>
-document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-        login();
+
+document
+.getElementById("loginButton")
+.addEventListener("click", function () {
+
+    var username =
+        document
+        .getElementById("user")
+        .value
+        .trim();
+
+    var password =
+        document
+        .getElementById("pass")
+        .value
+        .trim();
+
+
+    if (
+        username === "admin" &&
+        password === "123456"
+    ) {
+
+        localStorage.setItem(
+            "login",
+            "true"
+        );
+
+        window.location.href =
+            "dashboard.html";
+
+    } else {
+
+        alert(
+            "Wrong Username or Password"
+        );
+
     }
+
 });
-    <script src="./script.js"></script>
-</body>
-</html>
+
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            document
+            .getElementById(
+                "loginButton"
+            )
+            .click();
+
+        }
+
+    }
+);
+
 </script>
 
 </body>
