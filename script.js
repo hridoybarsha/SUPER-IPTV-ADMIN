@@ -1,3 +1,16 @@
+function login() {
+    const username = document.getElementById("user").value.trim();
+    const password = document.getElementById("pass").value.trim();
+
+    if (username === "admin" && password === "123456") {
+        localStorage.setItem("login", "true");
+
+        // Dashboard page
+        window.location.href = "./dashboard.html";
+    } else {
+        alert("Wrong Username or Password");
+    }
+}
 /* =========================================================
    SUPER IPTV - COMPLETE JAVASCRIPT
 ========================================================= */
