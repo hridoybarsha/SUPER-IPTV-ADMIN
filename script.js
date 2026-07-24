@@ -1,302 +1,232 @@
-"use strict";
-
 /* =========================================================
-   SUPER IPTV MANAGEMENT PANEL
-   COMPLETE SCRIPT.JS
-   Works with the provided index.html + style.css
-========================================================= */
+   SUPER IPTV PROFESSIONAL MANAGEMENT PANEL
+   UPI QR SYSTEM
+   Paytm + PhonePe + Google Pay Compatible
+   ========================================================= */
 
 
-/* =========================================================
-   1. PLAN PRICES
-========================================================= */
+/* =========================
+   STORAGE KEYS
+========================= */
+
+const USERS_KEY = "SUPER_IPTV_USERS";
+const PAYMENTS_KEY = "SUPER_IPTV_PAYMENTS";
+const SETTINGS_KEY = "SUPER_IPTV_SETTINGS";
+const TEMPLATE_KEY = "SUPER_IPTV_TEMPLATE";
+
+
+/* =========================
+   PLAN PRICES
+========================= */
 
 const PLAN_PRICES = {
+
     "1 Month": 200,
+
     "3 Months": 600,
+
     "6 Months": 1150,
+
     "12 Months": 2000
+
 };
 
 
-/* =========================================================
-   2. DEFAULT SETTINGS
-========================================================= */
+/* =========================
+   DEFAULT SETTINGS
+========================= */
 
 const DEFAULT_SETTINGS = {
+
     upi: "6289033804@ptsbi",
+
     contact: "6289033804",
+
     portal: "http://geoiptv.one:8880"
+
 };
 
 
-/* =========================================================
-   3. DEFAULT WHATSAPP TEMPLATE
-========================================================= */
+/* =========================
+   DEFAULT WHATSAPP MESSAGE
+========================= */
 
-const DEFAULT_TEMPLATE = `━━━━━━━━━━━━━━━━━━━━━━
-        SUPER IPTV
-     SERVICE ACTIVATION
-━━━━━━━━━━━━━━━━━━━━━━
+const DEFAULT_TEMPLATE = `📺 SUPER IPTV
 
 Hello 👋
 
-Your IPTV account has been successfully created.
+Your IPTV account details:
 
-🔐 LOGIN DETAILS
+👤 Username: {{USERNAME}}
 
-Username : {{USERNAME}}
-Password : {{PASSWORD}}
-Portal URL : {{PORTAL_URL}}
+🔐 Password: {{PASSWORD}}
 
-━━━━━━━━━━━━━━━━━━━━━━
+🌐 Portal: {{PORTAL_URL}}
 
-📦 SUBSCRIPTION
+📦 Plan: {{PLAN}}
 
-Plan       : {{PLAN}}
-Amount     : ₹{{AMOUNT}}
-Valid Upto : {{EXPIRY}}
+💰 Amount: ₹{{AMOUNT}}
 
-━━━━━━━━━━━━━━━━━━━━━━
+📅 Expiry: {{EXPIRY}}
 
-💳 PAYMENT
+💳 UPI ID: {{UPI_ID}}
 
-UPI ID : {{UPI_ID}}
-Contact : {{CONTACT}}
+📞 Contact: {{CONTACT}}
 
-Please complete your payment and send the payment screenshot.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-📞 SUPPORT
-
-WhatsApp / Call : {{CONTACT}}
-
-Thank you for choosing SUPER IPTV.
-
-━━━━━━━━━━━━━━━━━━━━━━`;
+Thank you for choosing SUPER IPTV.`;
 
 
-/* =========================================================
-   4. DATABASE VARIABLES
-========================================================= */
+/* =========================
+   DATA
+========================= */
 
 let users = [];
+
 let payments = [];
 
-let settings = {
-    ...DEFAULT_SETTINGS
-};
+let settings = {};
 
-let messageTemplate = DEFAULT_TEMPLATE;
+let messageTemplate = "";
 
 
-/* =========================================================
-   5. STORAGE KEYS
-========================================================= */
+/* =========================
+   QR VARIABLES
+========================= */
 
-const STORAGE = {
-    USERS: "SUPER_IPTV_USERS",
-    PAYMENTS: "SUPER_IPTV_PAYMENTS",
-    SETTINGS: "SUPER_IPTV_SETTINGS",
-    TEMPLATE: "SUPER_IPTV_TEMPLATE"
-};
+let currentUPILink = "";
+
+let currentQRCode = null;
 
 
-/* =========================================================
-   6. GET ELEMENT
-========================================================= */
+/* =========================
+   LOAD DATABASE
+========================= */
 
-function getElement(id) {
-    return document.getElementById(id);
-}
+function loadDatabase(){
 
+    try{
 
-/* =========================================================
-   7. LOAD DATABASE
-========================================================= */
-
-function loadDatabase() {
-
-    try {
-
-        const savedUsers =
-            localStorage.getItem(STORAGE.USERS);
-
-        const savedPayments =
-            localStorage.getItem(STORAGE.PAYMENTS);
-
-        const savedSettings =
-            localStorage.getItem(STORAGE.SETTINGS);
-
-        const savedTemplate =
-            localStorage.getItem(STORAGE.TEMPLATE);
+        users =
+        JSON.parse(
+            localStorage.getItem(USERS_KEY)
+        ) || [];
 
 
-        users = savedUsers
-            ? JSON.parse(savedUsers)
-            : [];
+        payments =
+        JSON.parse(
+            localStorage.getItem(PAYMENTS_KEY)
+        ) || [];
 
 
-        payments = savedPayments
-            ? JSON.parse(savedPayments)
-            : [];
-
-
-        settings = savedSettings
-            ? {
-                ...DEFAULT_SETTINGS,
-                ...JSON.parse(savedSettings)
-            }
-            : {
-                ...DEFAULT_SETTINGS
-            };
+        settings =
+        JSON.parse(
+            localStorage.getItem(SETTINGS_KEY)
+        ) ||
+        DEFAULT_SETTINGS;
 
 
         messageTemplate =
-            savedTemplate ||
-            DEFAULT_TEMPLATE;
+        localStorage.getItem(TEMPLATE_KEY)
+        ||
+        DEFAULT_TEMPLATE;
 
 
-        if (!Array.isArray(users)) {
-            users = [];
-        }
+    }catch(error){
 
-
-        if (!Array.isArray(payments)) {
-            payments = [];
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Database Load Error:",
-            error
-        );
+        console.error(error);
 
         users = [];
 
         payments = [];
 
-        settings = {
-            ...DEFAULT_SETTINGS
-        };
+        settings = DEFAULT_SETTINGS;
 
-        messageTemplate =
-            DEFAULT_TEMPLATE;
+        messageTemplate = DEFAULT_TEMPLATE;
+
     }
+
 }
 
 
-/* =========================================================
-   8. SAVE DATABASE
-========================================================= */
+/* =========================
+   SAVE DATABASE
+========================= */
 
-function saveDatabase() {
-
-    try {
-
-        localStorage.setItem(
-            STORAGE.USERS,
-            JSON.stringify(users)
-        );
-
-
-        localStorage.setItem(
-            STORAGE.PAYMENTS,
-            JSON.stringify(payments)
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Database Save Error:",
-            error
-        );
-
-        alert(
-            "Unable to save data."
-        );
-    }
-}
-
-
-/* =========================================================
-   9. SAVE SETTINGS
-========================================================= */
-
-function saveSettingsData() {
-
-    try {
-
-        localStorage.setItem(
-            STORAGE.SETTINGS,
-            JSON.stringify(settings)
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Settings Save Error:",
-            error
-        );
-    }
-}
-
-
-/* =========================================================
-   10. SAVE MESSAGE TEMPLATE
-========================================================= */
-
-function saveMessageTemplate() {
+function saveDatabase(){
 
     localStorage.setItem(
-        STORAGE.TEMPLATE,
-        messageTemplate
+
+        USERS_KEY,
+
+        JSON.stringify(users)
+
     );
+
+
+    localStorage.setItem(
+
+        PAYMENTS_KEY,
+
+        JSON.stringify(payments)
+
+    );
+
 }
 
 
-/* =========================================================
-   11. NAVIGATION
-========================================================= */
+/* =========================
+   SAVE SETTINGS
+========================= */
 
-function setupNavigation() {
+function saveSettingsData(){
+
+    localStorage.setItem(
+
+        SETTINGS_KEY,
+
+        JSON.stringify(settings)
+
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function setupNavigation(){
 
     const buttons =
-        document.querySelectorAll(
-            ".menu-btn"
-        );
+    document.querySelectorAll(".nav-btn");
 
 
-    buttons.forEach(function(button) {
+    buttons.forEach(button => {
 
         button.addEventListener(
+
             "click",
-            function() {
+
+            function(){
 
                 const page =
-                    this.getAttribute(
-                        "data-page"
-                    );
+                this.dataset.page;
 
-
-                /* Hide all pages */
 
                 document
-                    .querySelectorAll(".page")
-                    .forEach(function(section) {
+                .querySelectorAll(".page")
+                .forEach(section => {
 
-                        section.classList.remove(
-                            "active"
-                        );
+                    section.classList.remove(
+                        "active"
+                    );
 
-                    });
+                });
 
 
-                /* Remove active menu */
-
-                buttons.forEach(function(btn) {
+                document
+                .querySelectorAll(".nav-btn")
+                .forEach(btn => {
 
                     btn.classList.remove(
                         "active"
@@ -305,13 +235,11 @@ function setupNavigation() {
                 });
 
 
-                /* Show selected page */
-
                 const target =
-                    getElement(page);
+                document.getElementById(page);
 
 
-                if (target) {
+                if(target){
 
                     target.classList.add(
                         "active"
@@ -320,626 +248,903 @@ function setupNavigation() {
                 }
 
 
-                /* Active button */
-
                 this.classList.add(
                     "active"
                 );
 
 
-                /* Refresh page */
-
-                refreshAll();
-
-
-                /* Scroll top */
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
+                updateAll();
 
             }
+
         );
 
     });
-}
-
-
-/* =========================================================
-   12. REFRESH ALL
-========================================================= */
-
-function refreshAll() {
-
-    updateDashboard();
-
-    renderUsers();
-
-    renderPayments();
-
-    updatePaymentSummary();
-
-    updateReports();
 
 }
 
 
-/* =========================================================
-   13. CALCULATE EXPIRY
-========================================================= */
+/* =========================
+   CALCULATE EXPIRY
+========================= */
 
-function calculateExpiry(plan) {
+function calculateExpiry(plan){
 
-    const date =
-        new Date();
-
-
-    switch (plan) {
-
-        case "1 Month":
-            date.setMonth(
-                date.getMonth() + 1
-            );
-            break;
+    const date = new Date();
 
 
-        case "3 Months":
-            date.setMonth(
-                date.getMonth() + 3
-            );
-            break;
+    const months = {
+
+        "1 Month": 1,
+
+        "3 Months": 3,
+
+        "6 Months": 6,
+
+        "12 Months": 12
+
+    };
 
 
-        case "6 Months":
-            date.setMonth(
-                date.getMonth() + 6
-            );
-            break;
+    if(!months[plan]){
 
+        return "";
 
-        case "12 Months":
-            date.setMonth(
-                date.getMonth() + 12
-            );
-            break;
     }
 
 
-    return date;
+    date.setMonth(
+
+        date.getMonth()
+        +
+        months[plan]
+
+    );
+
+
+    return date.toISOString()
+    .split("T")[0];
+
 }
 
 
-/* =========================================================
-   14. FORMAT DATE
-========================================================= */
+/* =========================
+   FORMAT DATE
+========================= */
 
-function formatDate(date) {
+function formatDate(date){
 
-    if (!date) {
+    if(!date){
+
         return "-";
+
     }
 
 
     const d =
-        new Date(date);
+    new Date(date);
 
 
-    if (isNaN(d.getTime())) {
+    if(
+        Number.isNaN(
+            d.getTime()
+        )
+    ){
+
         return "-";
+
     }
 
 
     return d.toLocaleDateString(
-        "en-IN",
-        {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        }
+        "en-IN"
     );
+
 }
 
 
-/* =========================================================
-   15. CHECK USER ACTIVE
-========================================================= */
+/* =========================
+   GET USER STATUS
+========================= */
 
-function isUserActive(user) {
+function getUserStatus(user){
 
-    if (!user || !user.expiry) {
-        return false;
+    if(
+
+        user.paymentStatus
+        ===
+        "Pending"
+
+    ){
+
+        return "Pending";
+
     }
+
+
+    if(!user.expiry){
+
+        return "Active";
+
+    }
+
+
+    const expiry =
+    new Date(user.expiry);
+
+
+    const today =
+    new Date();
+
+
+    today.setHours(
+        0,0,0,0
+    );
+
+
+    if(expiry < today){
+
+        return "Expired";
+
+    }
+
+
+    return "Active";
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+    return String(
+        value || ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =========================
+   GENERATE UPI LINK
+========================= */
+
+function createUPILink(){
+
+    const amount =
+    Number(
+        document.getElementById(
+            "amount"
+        ).value
+    );
+
+
+    const customerName =
+    document.getElementById(
+        "customerName"
+    ).value.trim();
+
+
+    const plan =
+    document.getElementById(
+        "plan"
+    ).value;
+
+
+    const upiID =
+    settings.upi.trim();
+
+
+    if(
+
+        !upiID
+
+        ||
+
+        !amount
+
+        ||
+
+        !plan
+
+    ){
+
+        return "";
+
+    }
+
+
+    /*
+       STANDARD UPI PAYMENT URI
+
+       This is the important part.
+
+       Do NOT use a random QR string.
+
+       The QR must encode:
+
+       upi://pay
+       ?pa=UPI_ID
+       &pn=MERCHANT_NAME
+       &am=AMOUNT
+       &cu=INR
+    */
+
+
+    const params =
+    new URLSearchParams();
+
+
+    params.set(
+        "pa",
+        upiID
+    );
+
+
+    params.set(
+        "pn",
+        customerName
+        ||
+        "SUPER IPTV"
+    );
+
+
+    params.set(
+        "am",
+        amount.toFixed(2)
+    );
+
+
+    params.set(
+        "cu",
+        "INR"
+    );
+
+
+    params.set(
+        "tn",
+        `SUPER IPTV ${plan}`
+    );
 
 
     return (
-        new Date(user.expiry).getTime()
-        >=
-        new Date().getTime()
+
+        "upi://pay?"
+        +
+        params.toString()
+
     );
+
 }
 
 
-/* =========================================================
-   16. ESCAPE HTML
-========================================================= */
+/* =========================
+   GENERATE QR
+========================= */
 
-function escapeHTML(value) {
-
-    return String(
-        value === undefined ||
-        value === null
-            ? ""
-            : value
-    )
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================================
-   17. GENERATE QR
-========================================================= */
-
-function generateQR(plan) {
+function generateQR(){
 
     const qrContainer =
-        getElement("qrcode");
-
-    const qrPlan =
-        getElement("qrPlan");
-
-    const amountInput =
-        getElement("amount");
+    document.getElementById(
+        "qrcode"
+    );
 
 
-    if (!qrContainer) {
+    if(!qrContainer){
+
         return;
+
     }
+
+
+    currentUPILink =
+    createUPILink();
 
 
     qrContainer.innerHTML = "";
 
 
-    if (!plan) {
+    if(!currentUPILink){
 
-        if (amountInput) {
-            amountInput.value = "";
-        }
+        qrContainer.innerHTML = `
 
+            <div class="empty">
 
-        if (qrPlan) {
+                Select a plan and enter
+                amount to generate QR
 
-            qrPlan.innerHTML =
-                "Select a plan to generate QR";
+            </div>
 
-        }
-
-        return;
-    }
-
-
-    const amount =
-        PLAN_PRICES[plan];
-
-
-    if (!amount) {
-        return;
-    }
-
-
-    if (amountInput) {
-
-        amountInput.value =
-            amount;
-
-    }
-
-
-    if (
-        typeof QRCode ===
-        "undefined"
-    ) {
-
-        if (qrPlan) {
-
-            qrPlan.innerHTML =
-                "QR library not loaded.";
-
-        }
+        `;
 
         return;
+
     }
 
 
-    const upiLink =
-        "upi://pay" +
-        "?pa=" +
-        encodeURIComponent(
-            settings.upi
-        ) +
-        "&pn=" +
-        encodeURIComponent(
-            "SUPER IPTV"
-        ) +
-        "&am=" +
-        amount +
-        "&cu=INR" +
-        "&tn=" +
-        encodeURIComponent(
-            "SUPER IPTV " + plan
-        );
+    try{
 
-
-    try {
-
+        currentQRCode =
         new QRCode(
+
             qrContainer,
+
             {
-                text: upiLink,
-                width: 220,
-                height: 220,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
+
+                text:
+                currentUPILink,
+
+                width:
+                300,
+
+                height:
+                300,
+
+                colorDark:
+                "#000000",
+
+                colorLight:
+                "#ffffff",
+
                 correctLevel:
-                    QRCode.CorrectLevel.H
+                QRCode.CorrectLevel.H
+
             }
+
         );
 
 
-        if (qrPlan) {
+        updateQRInfo();
 
-            qrPlan.innerHTML =
-                "<strong>" +
-                escapeHTML(plan) +
-                "</strong>" +
-                "<br><br>" +
-                "Scan to Pay ₹" +
-                amount +
-                "<br>" +
-                "UPI ID: " +
-                escapeHTML(
-                    settings.upi
-                );
 
-        }
-
-    } catch (error) {
+    }catch(error){
 
         console.error(
             "QR Error:",
             error
         );
 
+
+        qrContainer.innerHTML = `
+
+            <div class="empty">
+
+                Unable to generate QR
+
+            </div>
+
+        `;
+
     }
+
 }
 
 
-/* =========================================================
-   18. DOWNLOAD CURRENT QR
-========================================================= */
+/* =========================
+   UPDATE QR INFORMATION
+========================= */
 
-function downloadCurrentQR() {
+function updateQRInfo(){
 
-    const qrContainer =
-        getElement("qrcode");
+    const name =
+    document.getElementById(
+        "customerName"
+    ).value
+    ||
+    "-";
 
 
-    if (!qrContainer) {
+    const amount =
+    document.getElementById(
+        "amount"
+    ).value
+    ||
+    "0";
+
+
+    const status =
+    document.getElementById(
+        "paymentStatus"
+    ).value
+    ||
+    "Pending";
+
+
+    document.getElementById(
+        "qrCustomer"
+    ).textContent =
+    name;
+
+
+    document.getElementById(
+        "qrAmount"
+    ).textContent =
+    amount;
+
+
+    document.getElementById(
+        "qrUpi"
+    ).textContent =
+    settings.upi;
+
+
+    document.getElementById(
+        "qrStatus"
+    ).textContent =
+    status;
+
+}
+
+
+/* =========================
+   PLAN CHANGE
+========================= */
+
+function setupPlan(){
+
+    const plan =
+    document.getElementById(
+        "plan"
+    );
+
+
+    const amount =
+    document.getElementById(
+        "amount"
+    );
+
+
+    if(!plan){
+
         return;
+
     }
 
 
-    const canvas =
-        qrContainer.querySelector(
-            "canvas"
-        );
+    plan.addEventListener(
+
+        "change",
+
+        function(){
+
+            const price =
+            PLAN_PRICES[
+                this.value
+            ];
 
 
-    const image =
-        qrContainer.querySelector(
-            "img"
-        );
+            amount.value =
+            price
+            ||
+            "";
 
 
-    let url = "";
+            generateQR();
+
+            updateQRInfo();
+
+        }
+
+    );
+
+}
 
 
-    if (canvas) {
+/* =========================
+   LIVE QR UPDATE
+========================= */
 
-        url =
-            canvas.toDataURL(
-                "image/png"
+function setupLiveQR(){
+
+    [
+
+        "customerName",
+
+        "amount",
+
+        "paymentStatus"
+
+    ].forEach(id => {
+
+        const element =
+        document.getElementById(id);
+
+
+        if(element){
+
+            element.addEventListener(
+
+                "input",
+
+                function(){
+
+                    generateQR();
+
+                    updateQRInfo();
+
+                }
+
             );
 
-    }
 
-    else if (image) {
+            element.addEventListener(
 
-        url =
-            image.src;
+                "change",
 
-    }
+                function(){
+
+                    generateQR();
+
+                    updateQRInfo();
+
+                }
+
+            );
+
+        }
+
+    });
+
+}
 
 
-    if (!url) {
+/* =========================
+   DOWNLOAD QR PNG
+========================= */
+
+function downloadCurrentQR(){
+
+    const qrContainer =
+    document.getElementById(
+        "qrcode"
+    );
+
+
+    if(!currentUPILink){
 
         alert(
             "Please select a plan first."
         );
 
         return;
+
     }
 
 
-    const link =
+    const canvas =
+    qrContainer.querySelector(
+        "canvas"
+    );
+
+
+    if(canvas){
+
+        const link =
         document.createElement(
             "a"
         );
 
 
-    link.href =
-        url;
-
-    link.download =
-        "SUPER-IPTV-Payment-QR.png";
+        link.download =
+        "SUPER-IPTV-UPI-QR.png";
 
 
-    document.body.appendChild(
-        link
-    );
+        link.href =
+        canvas.toDataURL(
+            "image/png"
+        );
 
 
-    link.click();
+        link.click();
 
 
-    link.remove();
-}
-
-
-/* =========================================================
-   19. PLAN CHANGE
-========================================================= */
-
-function setupPlanChange() {
-
-    const plan =
-        getElement("plan");
-
-
-    if (!plan) {
         return;
+
     }
 
 
-    plan.addEventListener(
-        "change",
-        function() {
-
-            generateQR(
-                this.value
-            );
-
-        }
+    const img =
+    qrContainer.querySelector(
+        "img"
     );
+
+
+    if(img){
+
+        const link =
+        document.createElement(
+            "a"
+        );
+
+
+        link.download =
+        "SUPER-IPTV-UPI-QR.png";
+
+
+        link.href =
+        img.src;
+
+
+        link.click();
+
+    }
+
 }
 
 
-/* =========================================================
-   20. ADD CUSTOMER
-========================================================= */
+/* =========================
+   COPY UPI ID
+========================= */
 
-function setupUserForm() {
+function copyUPI(){
+
+    navigator.clipboard
+    .writeText(
+        settings.upi
+    )
+
+    .then(() => {
+
+        alert(
+            "UPI ID copied successfully."
+        );
+
+    })
+
+    .catch(() => {
+
+        alert(
+            "Unable to copy UPI ID."
+        );
+
+    });
+
+}
+
+
+/* =========================
+   COPY UPI LINK
+========================= */
+
+function copyUPILink(){
+
+    if(!currentUPILink){
+
+        alert(
+            "Please generate QR first."
+        );
+
+        return;
+
+    }
+
+
+    navigator.clipboard
+    .writeText(
+        currentUPILink
+    )
+
+    .then(() => {
+
+        alert(
+            "UPI payment link copied."
+        );
+
+    });
+
+}
+
+
+/* =========================
+   ADD USER
+========================= */
+
+function setupUserForm(){
 
     const form =
-        getElement("userForm");
+    document.getElementById(
+        "userForm"
+    );
 
 
-    if (!form) {
+    if(!form){
+
         return;
+
     }
 
 
     form.addEventListener(
+
         "submit",
-        function(event) {
+
+        function(event){
 
             event.preventDefault();
 
 
             const name =
-                getElement(
-                    "customerName"
-                ).value.trim();
+            document.getElementById(
+                "customerName"
+            ).value.trim();
 
 
             const phone =
-                getElement(
-                    "phone"
-                ).value.trim();
+            document.getElementById(
+                "phone"
+            ).value.trim();
 
 
             const username =
-                getElement(
-                    "username"
-                ).value.trim();
+            document.getElementById(
+                "username"
+            ).value.trim();
 
 
             const password =
-                getElement(
-                    "password"
-                ).value.trim();
+            document.getElementById(
+                "password"
+            ).value.trim();
 
 
-            const portalUrl =
-                getElement(
-                    "portalUrl"
-                ).value.trim();
+            const portal =
+            document.getElementById(
+                "portalUrl"
+            ).value.trim();
 
 
             const plan =
-                getElement(
-                    "plan"
-                ).value;
+            document.getElementById(
+                "plan"
+            ).value;
+
+
+            const amount =
+            Number(
+                document.getElementById(
+                    "amount"
+                ).value
+            );
 
 
             const paymentStatus =
-                getElement(
-                    "paymentStatus"
-                ).value;
+            document.getElementById(
+                "paymentStatus"
+            ).value;
 
 
-            /* Validation */
+            if(
 
-            if (
-                !name ||
-                !phone ||
-                !username ||
-                !password ||
-                !portalUrl ||
+                !name
+                ||
+                !phone
+                ||
+                !username
+                ||
+                !password
+                ||
+                !portal
+                ||
                 !plan
-            ) {
+                ||
+                !amount
+
+            ){
 
                 alert(
                     "Please fill all required fields."
                 );
 
                 return;
+
             }
-
-
-            const amount =
-                PLAN_PRICES[plan];
-
-
-            if (!amount) {
-
-                alert(
-                    "Please select a valid plan."
-                );
-
-                return;
-            }
-
-
-            /* Duplicate Username */
-
-            const duplicate =
-                users.some(function(user) {
-
-                    return (
-                        String(
-                            user.username
-                        ).toLowerCase()
-                        ===
-                        username.toLowerCase()
-                    );
-
-                });
-
-
-            if (duplicate) {
-
-                alert(
-                    "Username already exists."
-                );
-
-                return;
-            }
-
-
-            const userId =
-                Date.now();
 
 
             const expiry =
-                calculateExpiry(
-                    plan
-                );
+            calculateExpiry(
+                plan
+            );
 
-
-            const now =
-                new Date()
-                    .toISOString();
-
-
-            /* User Object */
 
             const user = {
 
                 id:
-                    userId,
+                Date.now(),
 
                 name:
-                    name,
+                name,
 
                 phone:
-                    phone,
+                phone,
 
                 username:
-                    username,
+                username,
 
                 password:
-                    password,
+                password,
 
-                portalUrl:
-                    portalUrl,
+                portal:
+                portal,
 
                 plan:
-                    plan,
+                plan,
 
                 amount:
-                    amount,
+                amount,
 
                 paymentStatus:
-                    paymentStatus,
-
-                createdAt:
-                    now,
+                paymentStatus,
 
                 expiry:
-                    expiry.toISOString()
+                expiry,
+
+                createdAt:
+                new Date()
+                .toISOString()
 
             };
 
-
-            /* Add User */
 
             users.push(
                 user
             );
 
 
-            /* Add Payment */
-
             const payment = {
 
                 id:
-                    userId + 1,
+                Date.now()
+                +
+                1,
 
                 userId:
-                    userId,
+                user.id,
 
                 name:
-                    name,
+                name,
 
                 phone:
-                    phone,
+                phone,
 
                 plan:
-                    plan,
+                plan,
 
                 amount:
-                    amount,
+                amount,
 
                 status:
-                    paymentStatus,
+                paymentStatus,
 
                 date:
-                    now
+                new Date()
+                .toISOString()
 
             };
 
@@ -949,14 +1154,7 @@ function setupUserForm() {
             );
 
 
-            /* Save */
-
             saveDatabase();
-
-
-            /* Refresh */
-
-            refreshAll();
 
 
             alert(
@@ -964,106 +1162,118 @@ function setupUserForm() {
             );
 
 
-            /* Reset Form */
-
             form.reset();
 
 
-            const portal =
-                getElement(
-                    "portalUrl"
-                );
+            document.getElementById(
+                "portalUrl"
+            ).value =
+            settings.portal;
 
 
-            if (portal) {
+            document.getElementById(
+                "qrcode"
+            ).innerHTML = `
 
-                portal.value =
-                    settings.portal;
+                <div class="empty">
 
-            }
+                    Select a plan to generate QR
+
+                </div>
+
+            `;
 
 
-            generateQR("");
+            currentUPILink =
+            "";
+
+
+            updateAll();
 
         }
+
     );
+
 }
 
 
-/* =========================================================
-   21. RENDER USERS
-   21. RENDER USERS
-========================================================= */
+/* =========================
+   RENDER USERS
+========================= */
 
-function renderUsers() {
+function renderUsers(){
 
     const table =
-        getElement(
-            "usersTable"
-        );
-
-
-    if (!table) {
-        return;
-    }
-
-
-    const searchInput =
-        getElement(
-            "searchUser"
-        );
+    document.getElementById(
+        "usersTable"
+    );
 
 
     const search =
-        searchInput
-            ? searchInput.value
-                .toLowerCase()
-                .trim()
-            : "";
+    document.getElementById(
+        "searchUser"
+    );
+
+
+    if(!table){
+
+        return;
+
+    }
+
+
+    const query =
+    search
+    ?
+    search.value
+    .toLowerCase()
+    .trim()
+    :
+    "";
 
 
     const filtered =
-        users.filter(function(user) {
+    users.filter(
+        user => {
 
             return (
 
-                String(
-                    user.name || ""
-                )
+                user.name
                 .toLowerCase()
-                .includes(search)
+                .includes(query)
 
                 ||
 
-                String(
-                    user.phone || ""
-                )
+                user.phone
                 .toLowerCase()
-                .includes(search)
+                .includes(query)
 
                 ||
 
-                String(
-                    user.username || ""
-                )
+                user.username
                 .toLowerCase()
-                .includes(search)
+                .includes(query)
 
             );
 
-        });
+        }
+
+    );
 
 
-    if (
-        filtered.length === 0
-    ) {
+    if(!filtered.length){
 
         table.innerHTML = `
 
             <tr>
 
-                <td colspan="9">
+                <td
+                    colspan="8"
+                    class="empty"
+                >
+
                     No Customers Found
+
                 </td>
 
             </tr>
@@ -1071,1369 +1281,610 @@ function renderUsers() {
         `;
 
         return;
+
     }
 
 
     table.innerHTML =
 
-        filtered
-        .slice()
-        .reverse()
-        .map(function(user) {
+    filtered.map(
+        user => {
 
-            const active =
-                isUserActive(user);
+            const status =
+            getUserStatus(
+                user
+            );
 
 
             return `
 
-                <tr>
+            <tr>
 
-                    <td>
-                        ${escapeHTML(
-                            user.name
-                        )}
-                    </td>
+                <td>
+                    ${escapeHTML(user.name)}
+                </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.phone
-                        )}
-                    </td>
+                <td>
+                    ${escapeHTML(user.phone)}
+                </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.username
-                        )}
-                    </td>
+                <td>
+                    ${escapeHTML(user.username)}
+                </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.password
-                        )}
-                    </td>
+                <td>
+                    ${escapeHTML(user.plan)}
+                </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.plan
-                        )}
-                    </td>
+                <td>
+                    ₹${user.amount}
+                </td>
 
-                    <td>
-                        ₹${Number(
-                            user.amount || 0
-                        )}
-                    </td>
+                <td>
 
-                    <td>
+                    <span class="status
+                    ${
+                        status === "Paid"
+                        ||
+                        status === "Active"
+                        ?
+                        "status-paid"
+                        :
+                        status === "Pending"
+                        ?
+                        "status-pending"
+                        :
+                        "status-expired"
+                    }">
 
-                        <span class="status ${
-                            active
-                                ? "active-status"
-                                : "expired-status"
-                        }">
+                    ${status}
 
-                            ${
-                                active
-                                    ? "Active"
-                                    : "Expired"
-                            }
+                    </span>
 
-                        </span>
+                </td>
 
-                    </td>
+                <td>
+                    ${formatDate(user.expiry)}
+                </td>
 
-                    <td>
-                        ${formatDate(
-                            user.expiry
-                        )}
-                    </td>
+                <td>
 
-                    <td>
+                    <button
+                    class="action-btn btn-danger"
+                    onclick="deleteUser(${user.id})">
 
-                        <button
-                            type="button"
-                            class="action-btn whatsapp-btn"
-                            onclick="sendWhatsApp('${user.id}')"
-                        >
-                            📱 WhatsApp
-                        </button>
+                    Delete
 
+                    </button>
 
-                        <button
-                            type="button"
-                            class="action-btn copy-btn"
-                            onclick="copyMessage('${user.id}')"
-                        >
-                            📋 Copy
-                        </button>
+                </td>
 
-
-                        <button
-                            type="button"
-                            class="action-btn primary-btn"
-                            onclick="downloadUserQR('${user.id}')"
-                        >
-                            📥 QR
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="action-btn delete-btn"
-                            onclick="deleteUser('${user.id}')"
-                        >
-                            🗑️ Delete
-                        </button>
-
-                    </td>
-
-                </tr>
+            </tr>
 
             `;
 
-        })
-        .join("");
-}
-
-
-/* =========================================================
-   22. SEARCH USER
-========================================================= */
-
-function setupSearch() {
-
-    const search =
-        getElement(
-            "searchUser"
-        );
-
-
-    if (!search) {
-        return;
-    }
-
-
-    search.addEventListener(
-        "input",
-        function() {
-
-            renderUsers();
-
         }
-    );
+
+    ).join("");
+
 }
 
 
-/* =========================================================
-   23. CREATE WHATSAPP MESSAGE
-========================================================= */
+/* =========================
+   DELETE USER
+========================= */
 
-function createMessage(user) {
+function deleteUser(id){
 
-    if (!user) {
-        return "";
-    }
+    if(
 
-
-    let message =
-        messageTemplate;
-
-
-    const replacements = {
-
-        "{{USERNAME}}":
-            user.username || "",
-
-        "{{PASSWORD}}":
-            user.password || "",
-
-        "{{PORTAL_URL}}":
-            user.portalUrl || "",
-
-        "{{PLAN}}":
-            user.plan || "",
-
-        "{{AMOUNT}}":
-            user.amount || "",
-
-        "{{EXPIRY}}":
-            formatDate(
-                user.expiry
-            ),
-
-        "{{UPI_ID}}":
-            settings.upi || "",
-
-        "{{CONTACT}}":
-            settings.contact || ""
-
-    };
-
-
-    Object.keys(
-        replacements
-    )
-    .forEach(function(key) {
-
-        message =
-            message.split(key)
-                .join(
-                    replacements[key]
-                );
-
-    });
-
-
-    return message;
-}
-
-
-/* =========================================================
-   24. SEND WHATSAPP
-========================================================= */
-
-function sendWhatsApp(id) {
-
-    const user =
-        users.find(function(item) {
-
-            return String(
-                item.id
-            )
-            ===
-            String(id);
-
-        });
-
-
-    if (!user) {
-
-        alert(
-            "Customer not found."
-        );
-
-        return;
-    }
-
-
-    let phone =
-        String(
-            user.phone || ""
+        !confirm(
+            "Delete this customer?"
         )
-        .replace(
-            /\D/g,
-            ""
-        );
 
-
-    if (
-        phone.length === 10
-    ) {
-
-        phone =
-            "91" +
-            phone;
-
-    }
-
-
-    const message =
-        createMessage(
-            user
-        );
-
-
-    const url =
-        "https://wa.me/" +
-        phone +
-        "?text=" +
-        encodeURIComponent(
-            message
-        );
-
-
-    window.open(
-        url,
-        "_blank"
-    );
-}
-
-
-/* =========================================================
-25. COPY MESSAGE
-========================================================= */
-
-function copyMessage(id) {
-
-    const user =
-        users.find(function(item) {
-
-            return String(
-                item.id
-            )
-            ===
-            String(id);
-
-        });
-
-
-    if (!user) {
-
-        alert(
-            "Customer not found."
-        );
+    ){
 
         return;
-    }
 
-
-    const message =
-        createMessage(
-            user
-        );
-
-
-    if (
-        navigator.clipboard &&
-        window.isSecureContext
-    ) {
-
-        navigator.clipboard
-            .writeText(
-                message
-            )
-            .then(function() {
-
-                alert(
-                    "Message copied!"
-                );
-
-            })
-            .catch(function() {
-
-                fallbackCopy(
-                    message
-                );
-
-            });
-
-    }
-
-    else {
-
-        fallbackCopy(
-            message
-        );
-
-    }
-}
-
-
-/* =========================================================
-   26. FALLBACK COPY
-========================================================= */
-
-function fallbackCopy(text) {
-
-    const textarea =
-        document.createElement(
-            "textarea"
-        );
-
-
-    textarea.value =
-        text;
-
-
-    textarea.style.position =
-        "fixed";
-
-    textarea.style.left =
-        "-9999px";
-
-
-    document.body.appendChild(
-        textarea
-    );
-
-
-    textarea.select();
-
-
-    try {
-
-        document.execCommand(
-            "copy"
-        );
-
-        alert(
-            "Message copied!"
-        );
-
-    } catch (error) {
-
-        alert(
-            "Copy failed. Please copy manually."
-        );
-
-    }
-
-
-    textarea.remove();
-}
-
-
-/* =========================================================
-   27. DELETE USER
-========================================================= */
-
-function deleteUser(id) {
-
-    const user =
-        users.find(function(item) {
-
-            return String(
-                item.id
-            )
-            ===
-            String(id);
-
-        });
-
-
-    if (!user) {
-
-        alert(
-            "Customer not found."
-        );
-
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            "Delete customer " +
-            user.name +
-            "?"
-        );
-
-
-    if (!confirmed) {
-        return;
     }
 
 
     users =
-        users.filter(function(item) {
-
-            return String(
-                item.id
-            )
-            !==
-            String(id);
-
-        });
+    users.filter(
+        user =>
+        user.id !== id
+    );
 
 
     payments =
-        payments.filter(function(item) {
-
-            return String(
-                item.userId
-            )
-            !==
-            String(id);
-
-        });
+    payments.filter(
+        payment =>
+        payment.userId !== id
+    );
 
 
     saveDatabase();
 
 
-    refreshAll();
+    updateAll();
 
-
-    alert(
-        "Customer deleted successfully."
-    );
 }
 
 
-/* =========================================================
-   28. DOWNLOAD USER QR
-========================================================= */
+/* =========================
+   RENDER PAYMENTS
+========================= */
 
-function downloadUserQR(id) {
-
-    const user =
-        users.find(function(item) {
-
-            return String(
-                item.id
-            )
-            ===
-            String(id);
-
-        });
-
-
-    if (!user) {
-
-        alert(
-            "Customer not found."
-        );
-
-        return;
-    }
-
-
-    if (
-        typeof QRCode ===
-        "undefined"
-    ) {
-
-        alert(
-            "QR library not loaded."
-        );
-
-        return;
-    }
-
-
-    const box =
-        document.createElement(
-            "div"
-        );
-
-
-    box.style.position =
-        "fixed";
-
-
-    box.style.left =
-        "-9999px";
-
-
-    document.body.appendChild(
-        box
-    );
-
-
-    const upiLink =
-        "upi://pay" +
-        "?pa=" +
-        encodeURIComponent(
-            settings.upi
-        ) +
-        "&pn=" +
-        encodeURIComponent(
-            "SUPER IPTV"
-        ) +
-        "&am=" +
-        Number(
-            user.amount || 0
-        ) +
-        "&cu=INR" +
-        "&tn=" +
-        encodeURIComponent(
-            "SUPER IPTV " +
-            user.plan
-        );
-
-
-    new QRCode(
-        box,
-        {
-            text:
-                upiLink,
-
-            width:
-                300,
-
-            height:
-                300,
-
-            correctLevel:
-                QRCode.CorrectLevel.H
-        }
-    );
-
-
-    setTimeout(function() {
-
-        const canvas =
-            box.querySelector(
-                "canvas"
-            );
-
-
-        if (!canvas) {
-
-            box.remove();
-
-            alert(
-                "Unable to generate QR."
-            );
-
-            return;
-        }
-
-
-        const link =
-            document.createElement(
-                "a"
-            );
-
-
-        link.download =
-            "SUPER-IPTV-" +
-            user.username +
-            "-QR.png";
-
-
-        link.href =
-            canvas.toDataURL(
-                "image/png"
-            );
-
-
-        document.body.appendChild(
-            link
-        );
-
-
-        link.click();
-
-
-        link.remove();
-
-
-        box.remove();
-
-    }, 500);
-}
-
-
-/* =========================================================
-29. RENDER PAYMENTS
-========================================================= */
-
-function renderPayments() {
+function renderPayments(){
 
     const table =
-        getElement(
-            "paymentsTable"
-        );
+    document.getElementById(
+        "paymentsTable"
+    );
 
 
-    if (!table) {
+    if(!table){
+
         return;
+
     }
 
 
-    if (
-        payments.length === 0
-    ) {
+    if(!payments.length){
 
         table.innerHTML = `
 
-            <tr>
+        <tr>
 
-                <td colspan="6">
-                    No Payments Yet
-                </td>
+            <td
+            colspan="6"
+            class="empty">
 
-            </tr>
+            No Payments Yet
+
+            </td>
+
+        </tr>
 
         `;
 
         return;
+
     }
 
 
     table.innerHTML =
 
-        payments
-        .slice()
-        .reverse()
-        .map(function(payment) {
+    payments
+    .slice()
+    .reverse()
+    .map(
+        payment => `
 
-            return `
+        <tr>
 
-                <tr>
+            <td>
+                ${escapeHTML(payment.name)}
+            </td>
 
-                    <td>
-                        ${escapeHTML(
-                            payment.name
-                        )}
-                    </td>
+            <td>
+                ${escapeHTML(payment.phone)}
+            </td>
 
-                    <td>
-                        ${escapeHTML(
-                            payment.phone
-                        )}
-                    </td>
+            <td>
+                ${escapeHTML(payment.plan)}
+            </td>
 
-                    <td>
-                        ${escapeHTML(
-                            payment.plan
-                        )}
-                    </td>
+            <td>
+                ₹${payment.amount}
+            </td>
 
-                    <td>
-                        ₹${Number(
-                            payment.amount || 0
-                        )}
-                    </td>
+            <td>
+                ${escapeHTML(payment.status)}
+            </td>
 
-                    <td>
+            <td>
+                ${formatDate(payment.date)}
+            </td>
 
-                        <span class="status ${
-                            payment.status === "Paid"
-                                ? "active-status"
-                                : "expired-status"
-                        }">
+        </tr>
 
-                            ${escapeHTML(
-                                payment.status
-                            )}
+        `
+    )
+    .join("");
 
-                        </span>
-
-                    </td>
-
-                    <td>
-                        ${formatDate(
-                            payment.date
-                        )}
-                    </td>
-
-                </tr>
-
-            `;
-
-        })
-        .join("");
 }
 
 
-/* =========================================================
-   30. PAYMENT SUMMARY
-========================================================= */
+/* =========================
+   DASHBOARD
+========================= */
 
-function updatePaymentSummary() {
-
-    const total =
-        payments.length;
-
-
-    const paid =
-        payments.filter(function(payment) {
-
-            return payment.status ===
-                "Paid";
-
-        }).length;
-
-
-    const pending =
-        payments.filter(function(payment) {
-
-            return payment.status ===
-                "Pending";
-
-        }).length;
-
-
-    const revenue =
-        payments
-        .filter(function(payment) {
-
-            return payment.status ===
-                "Paid";
-
-        })
-        .reduce(function(total, payment) {
-
-            return total +
-                Number(
-                    payment.amount || 0
-                );
-
-        }, 0);
-
-
-    const totalPayments =
-        getElement(
-            "totalPayments"
-        );
-
-
-    const paidPayments =
-        getElement(
-            "paidPayments"
-        );
-
-
-    const pendingPayments =
-        getElement(
-            "pendingPayments"
-        );
-
-
-    const paymentRevenue =
-        getElement(
-            "paymentRevenue"
-        );
-
-
-    if (totalPayments) {
-        totalPayments.textContent =
-            total;
-    }
-
-
-    if (paidPayments) {
-        paidPayments.textContent =
-            paid;
-    }
-
-
-    if (pendingPayments) {
-        pendingPayments.textContent =
-            pending;
-    }
-
-
-    if (paymentRevenue) {
-
-        paymentRevenue.textContent =
-            "₹" +
-            revenue;
-
-    }
-}
-
-
-/* =========================================================
-   31. UPDATE DASHBOARD
-========================================================= */
-
-function updateDashboard() {
+function updateDashboard(){
 
     const total =
-        users.length;
+    users.length;
 
 
     const active =
-        users.filter(function(user) {
-
-            return isUserActive(
-                user
-            );
-
-        }).length;
+    users.filter(
+        user =>
+        getUserStatus(user)
+        ===
+        "Active"
+    ).length;
 
 
     const expired =
-        total -
-        active;
+    users.filter(
+        user =>
+        getUserStatus(user)
+        ===
+        "Expired"
+    ).length;
 
 
     const revenue =
-        payments
-        .filter(function(payment) {
+    payments
+    .filter(
+        payment =>
+        payment.status
+        ===
+        "Paid"
+    )
+    .reduce(
 
-            return payment.status ===
-                "Paid";
+        (
+            total,
+            payment
+        ) =>
+        total
+        +
+        Number(
+            payment.amount
+        ),
 
-        })
-        .reduce(function(total, payment) {
+        0
 
-            return total +
-                Number(
-                    payment.amount || 0
-                );
-
-        }, 0);
-
-
-    const totalUsers =
-        getElement(
-            "totalUsers"
-        );
-
-
-    const activeUsers =
-        getElement(
-            "activeUsers"
-        );
+    );
 
 
-    const expiredUsers =
-        getElement(
-            "expiredUsers"
-        );
+    document.getElementById(
+        "totalUsers"
+    ).textContent =
+    total;
 
 
-    const totalRevenue =
-        getElement(
-            "totalRevenue"
-        );
+    document.getElementById(
+        "activeUsers"
+    ).textContent =
+    active;
 
 
-    if (totalUsers) {
-        totalUsers.textContent =
-            total;
-    }
+    document.getElementById(
+        "expiredUsers"
+    ).textContent =
+    expired;
 
 
-    if (activeUsers) {
-        activeUsers.textContent =
-            active;
-    }
+    document.getElementById(
+        "totalRevenue"
+    ).textContent =
+    "₹" + revenue;
 
 
-    if (expiredUsers) {
-        expiredUsers.textContent =
-            expired;
-    }
+    const recent =
+    document.getElementById(
+        "recentUsersTable"
+    );
 
 
-    if (totalRevenue) {
+    if(!recent){
 
-        totalRevenue.textContent =
-            "₹" +
-            revenue;
-
-    }
-
-
-    updateRecentUsers();
-}
-
-
-/* =========================================================
-   32. RECENT USERS
-========================================================= */
-
-function updateRecentUsers() {
-
-    const table =
-        getElement(
-            "recentUsers"
-        );
-
-
-    if (!table) {
         return;
+
     }
 
 
-    if (
-        users.length === 0
-    ) {
+    const latest =
+    users
+    .slice()
+    .reverse()
+    .slice(
+        0,
+        5
+    );
 
-        table.innerHTML = `
 
-            <tr>
+    if(!latest.length){
 
-                <td colspan="5">
-                    No Users Yet
-                </td>
+        recent.innerHTML = `
 
-            </tr>
+        <tr>
+
+            <td
+            colspan="5"
+            class="empty">
+
+            No Users Yet
+
+            </td>
+
+        </tr>
 
         `;
 
         return;
+
     }
 
 
-    table.innerHTML =
+    recent.innerHTML =
 
-        users
-        .slice()
-        .reverse()
-        .slice(0, 5)
-        .map(function(user) {
+    latest.map(
+        user => `
 
-            const active =
-                isUserActive(
-                    user
-                );
+        <tr>
 
+            <td>
+                ${escapeHTML(user.name)}
+            </td>
 
-            return `
+            <td>
+                ${escapeHTML(user.phone)}
+            </td>
 
-                <tr>
+            <td>
+                ${escapeHTML(user.plan)}
+            </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.name
-                        )}
-                    </td>
+            <td>
+                ${getUserStatus(user)}
+            </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.phone
-                        )}
-                    </td>
+            <td>
+                ${formatDate(user.expiry)}
+            </td>
 
-                    <td>
-                        ${escapeHTML(
-                            user.plan
-                        )}
-                    </td>
+        </tr>
 
-                    <td>
+        `
+    )
+    .join("");
 
-                        <span class="status ${
-                            active
-                                ? "active-status"
-                                : "expired-status"
-                        }">
-
-                            ${
-                                active
-                                    ? "Active"
-                                    : "Expired"
-                            }
-
-                        </span>
-
-                    </td>
-
-                    <td>
-                        ${formatDate(
-                            user.expiry
-                        )}
-                    </td>
-
-                </tr>
-
-            `;
-
-        })
-        .join("");
 }
 
 
-/* =========================================================
-33. UPDATE REPORTS
-========================================================= */
+/* =========================
+   PAYMENT STATS
+========================= */
 
-function updateReports() {
+function updatePaymentStats(){
 
-    const revenue =
-        payments
-        .filter(function(payment) {
-
-            return payment.status ===
-                "Paid";
-
-        })
-        .reduce(function(total, payment) {
-
-            return total +
-                Number(
-                    payment.amount || 0
-                );
-
-        }, 0);
+    const total =
+    payments.length;
 
 
     const paid =
-        payments.filter(function(payment) {
-
-            return payment.status ===
-                "Paid";
-
-        }).length;
+    payments.filter(
+        p =>
+        p.status
+        ===
+        "Paid"
+    );
 
 
     const pending =
-        payments.filter(function(payment) {
-
-            return payment.status ===
-                "Pending";
-
-        }).length;
-
-
-    const reportRevenue =
-        getElement(
-            "reportRevenue"
-        );
+    payments.filter(
+        p =>
+        p.status
+        ===
+        "Pending"
+    );
 
 
-    const paidCount =
-        getElement(
-            "paidCount"
-        );
+    const revenue =
+    paid.reduce(
+
+        (
+            total,
+            payment
+        ) =>
+        total
+        +
+        Number(
+            payment.amount
+        ),
+
+        0
+
+    );
 
 
-    const pendingCount =
-        getElement(
-            "pendingCount"
-        );
+    document.getElementById(
+        "totalPayments"
+    ).textContent =
+    total;
 
 
-    if (reportRevenue) {
-
-        reportRevenue.textContent =
-            "₹" +
-            revenue;
-
-    }
+    document.getElementById(
+        "paidPayments"
+    ).textContent =
+    paid.length;
 
 
-    if (paidCount) {
-
-        paidCount.textContent =
-            paid;
-
-    }
+    document.getElementById(
+        "pendingPayments"
+    ).textContent =
+    pending.length;
 
 
-    if (pendingCount) {
+    document.getElementById(
+        "paymentRevenue"
+    ).textContent =
+    "₹" + revenue;
 
-        pendingCount.textContent =
-            pending;
 
-    }
+    document.getElementById(
+        "reportRevenue"
+    ).textContent =
+    "₹" + revenue;
+
+
+    document.getElementById(
+        "reportPaid"
+    ).textContent =
+    paid.length;
+
+
+    document.getElementById(
+        "reportPending"
+    ).textContent =
+    pending.length;
+
 }
 
 
-/* =========================================================
-   34. LOAD SETTINGS
-========================================================= */
+/* =========================
+   SETTINGS
+========================= */
 
-function loadSettings() {
+function loadSettings(){
 
-    const upi =
-        getElement(
-            "settingUpi"
-        );
-
-
-    const contact =
-        getElement(
-            "settingContact"
-        );
+    document.getElementById(
+        "settingsUpi"
+    ).value =
+    settings.upi;
 
 
-    const portal =
-        getElement(
-            "settingPortal"
-        );
+    document.getElementById(
+        "settingsContact"
+    ).value =
+    settings.contact;
 
 
-    const template =
-        getElement(
-            "messageTemplate"
-        );
+    document.getElementById(
+        "settingsPortal"
+    ).value =
+    settings.portal;
 
 
-    if (upi) {
-        upi.value =
-            settings.upi || "";
-    }
+    document.getElementById(
+        "messageTemplate"
+    ).value =
+    messageTemplate;
 
-
-    if (contact) {
-        contact.value =
-            settings.contact || "";
-    }
-
-
-    if (portal) {
-        portal.value =
-            settings.portal || "";
-    }
-
-
-    if (template) {
-        template.value =
-            messageTemplate || "";
-    }
 }
 
 
-/* =========================================================
-   35. SAVE SETTINGS BUTTON
-========================================================= */
+/* =========================
+   SAVE SETTINGS
+========================= */
 
-function setupSettings() {
+function setupSettings(){
 
-    const saveButton =
-        getElement(
-            "saveSettings"
-        );
+    document.getElementById(
+        "saveSettings"
+    )
+    .addEventListener(
 
-
-    if (saveButton) {
-
-        saveButton.addEventListener(
-            "click",
-            function() {
-
-                const upi =
-                    getElement(
-                        "settingUpi"
-                    );
-
-
-                const contact =
-                    getElement(
-                        "settingContact"
-                    );
-
-
-                const portal =
-                    getElement(
-                        "settingPortal"
-                    );
-
-
-                settings = {
-
-                    upi:
-                        upi
-                            ? upi.value.trim()
-                            : "",
-
-                    contact:
-                        contact
-                            ? contact.value.trim()
-                            : "",
-
-                    portal:
-                        portal
-                            ? portal.value.trim()
-                            : ""
-
-                };
-
-
-                saveSettingsData();
-
-
-                loadSettings();
-
-
-                alert(
-                    "Settings saved successfully!"
-                );
-
-
-                /* Update QR if plan selected */
-
-                const plan =
-                    getElement(
-                        "plan"
-                    );
-
-
-                if (
-                    plan &&
-                    plan.value
-                ) {
-
-                    generateQR(
-                        plan.value
-                    );
-
-                }
-
-            }
-        );
-    }
-
-
-    const saveTemplate =
-        getElement(
-            "saveTemplate"
-        );
-
-
-    if (saveTemplate) {
-
-        saveTemplate.addEventListener(
-            "click",
-            function() {
-
-                const template =
-                    getElement(
-                        "messageTemplate"
-                    );
-
-
-                if (template) {
-
-                    messageTemplate =
-                        template.value;
-
-                    saveMessageTemplate();
-
-                    alert(
-                        "WhatsApp template saved!"
-                    );
-
-                }
-
-            }
-        );
-    }
-}
-
-
-/* =========================================================
-   36. DELETE ALL
-========================================================= */
-
-function setupDeleteAll() {
-
-    const button =
-        getElement(
-            "deleteAll"
-        );
-
-
-    if (!button) {
-        return;
-    }
-
-
-    button.addEventListener(
         "click",
-        function() {
 
-            if (
-                users.length === 0 &&
-                payments.length === 0
-            ) {
+        function(){
 
-                alert(
-                    "There is no data to delete."
-                );
+            settings.upi =
+            document.getElementById(
+                "settingsUpi"
+            ).value.trim();
+
+
+            settings.contact =
+            document.getElementById(
+                "settingsContact"
+            ).value.trim();
+
+
+            settings.portal =
+            document.getElementById(
+                "settingsPortal"
+            ).value.trim();
+
+
+            saveSettingsData();
+
+
+            updateQRInfo();
+
+
+            alert(
+                "Settings saved successfully."
+            );
+
+        }
+
+    );
+
+
+    document.getElementById(
+        "saveTemplate"
+    )
+    .addEventListener(
+
+        "click",
+
+        function(){
+
+            messageTemplate =
+            document.getElementById(
+                "messageTemplate"
+            ).value;
+
+
+            localStorage.setItem(
+
+                TEMPLATE_KEY,
+
+                messageTemplate
+
+            );
+
+
+            alert(
+                "Message template saved."
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================
+   DELETE ALL
+========================= */
+
+function setupDeleteAll(){
+
+    document.getElementById(
+        "deleteAll"
+    )
+    .addEventListener(
+
+        "click",
+
+        function(){
+
+            if(
+
+                !confirm(
+                    "Delete ALL users and payments?"
+                )
+
+            ){
 
                 return;
-            }
 
-
-            const confirmed =
-                confirm(
-                    "WARNING!\n\n" +
-                    "This will permanently delete ALL users and payments.\n\n" +
-                    "Are you sure?"
-                );
-
-
-            if (!confirmed) {
-                return;
             }
 
 
@@ -2445,150 +1896,130 @@ function setupDeleteAll() {
             saveDatabase();
 
 
-            refreshAll();
+            updateAll();
 
 
             alert(
-                "All users and payments deleted."
+                "All data deleted."
             );
 
         }
+
     );
+
 }
 
 
-/* =========================================================
-   37. DOWNLOAD QR BUTTON
-========================================================= */
+/* =========================
+   SEARCH
+========================= */
 
-function setupQRDownload() {
+function setupSearch(){
 
-    const button =
-        getElement(
+    const search =
+    document.getElementById(
+        "searchUser"
+    );
+
+
+    if(search){
+
+        search.addEventListener(
+
+            "input",
+
+            renderUsers
+
+        );
+
+    }
+
+}
+
+
+/* =========================
+   UPDATE ALL
+========================= */
+
+function updateAll(){
+
+    renderUsers();
+
+    renderPayments();
+
+    updateDashboard();
+
+    updatePaymentStats();
+
+}
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    function(){
+
+        loadDatabase();
+
+        setupNavigation();
+
+        setupPlan();
+
+        setupLiveQR();
+
+        setupUserForm();
+
+        setupSettings();
+
+        setupDeleteAll();
+
+        setupSearch();
+
+        loadSettings();
+
+        updateAll();
+
+
+        document.getElementById(
             "downloadQR"
+        )
+        .addEventListener(
+
+            "click",
+
+            downloadCurrentQR
+
         );
 
 
-    if (!button) {
-        return;
+        document.getElementById(
+            "copyUPI"
+        )
+        .addEventListener(
+
+            "click",
+
+            copyUPI
+
+        );
+
+
+        document.getElementById(
+            "copyUPILink"
+        )
+        .addEventListener(
+
+            "click",
+
+            copyUPILink
+
+        );
+
     }
 
-
-    button.addEventListener(
-        "click",
-        function() {
-
-            downloadCurrentQR();
-
-        }
-    );
-}
-
-
-/* =========================================================
-   38. INITIALIZE APPLICATION
-========================================================= */
-
-function initializeApp() {
-
-    console.log(
-        "SUPER IPTV Panel Starting..."
-    );
-
-
-    /* Load database */
-
-    loadDatabase();
-
-
-    /* Setup navigation */
-
-    setupNavigation();
-
-
-    /* Setup user form */
-
-    setupUserForm();
-
-
-    /* Setup search */
-
-    setupSearch();
-
-
-    /* Setup plan */
-
-    setupPlanChange();
-
-
-    /* Setup QR */
-
-    setupQRDownload();
-
-
-    /* Setup settings */
-
-    setupSettings();
-
-
-    /* Setup delete */
-
-    setupDeleteAll();
-
-
-    /* Load settings */
-
-    loadSettings();
-
-
-    /* Initial refresh */
-
-    refreshAll();
-
-
-    console.log(
-        "SUPER IPTV Panel Ready."
-    );
-}
-
-
-/* =========================================================
-39. START APPLICATION
-========================================================= */
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeApp
-    );
-
-} else {
-
-    initializeApp();
-
-}
-
-
-/* =========================================================
-   40. GLOBAL FUNCTIONS
-   Required for inline onclick buttons
-========================================================= */
-
-window.sendWhatsApp =
-    sendWhatsApp;
-
-window.copyMessage =
-    copyMessage;
-
-window.deleteUser =
-    deleteUser;
-
-window.downloadUserQR =
-    downloadUserQR;
-
-window.downloadCurrentQR =
-    downloadCurrentQR;
+);
